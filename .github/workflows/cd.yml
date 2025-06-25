@@ -9,6 +9,7 @@ on:
 
 jobs:
   deploy:
+    name: 🚢 Deploy to Docker Hub and Render
     runs-on: ubuntu-latest
 
     steps:
