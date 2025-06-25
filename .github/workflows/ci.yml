@@ -25,4 +25,4 @@ jobs:
         run: npm run lint
 
       - name: 🐳 Docker build test
-        run: docker build -t inf-backend-template .
+        run: docker build -t tao-backend .
