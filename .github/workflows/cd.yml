@@ -30,6 +30,3 @@ jobs:
           context: .
           push: true
           tags: trhgatu/inf-backend-template:${{ github.ref_name }}
-
-      - name: 🚀 Trigger redeploy on Render
-        run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
