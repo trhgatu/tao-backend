@@ -3,11 +3,11 @@
     "version": "1.0.0",
     "main": "index.js",
     "scripts": {
-        "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+        "dev": "set NODE_ENV=development&& ts-node-dev --respawn --transpile-only -r tsconfig-paths/register -r ./src/register-alias.ts src/server.ts",
         "build": "tsc",
         "start": "node dist/server.js",
-        "generate": "ts-node -r tsconfig-paths/register src/scripts/generate-module.ts",
-        "seed": "ts-node src/scripts/seed.ts",
+        "generate": "ts-node -r tsconfig-paths/register -r ./src/register-alias.ts src/scripts/generate-module.ts",
+        "seed": "ts-node -r tsconfig-paths/register -r ./src/register-alias.ts src/scripts/seed.ts",
         "lint": "eslint . --ext .ts"
     },
     "keywords": [],
@@ -41,6 +41,7 @@
         "@types/cors": "^2.8.19",
         "@types/express": "^5.0.3",
         "@types/helmet": "^4.0.0",
+        "@types/module-alias": "^2.0.4",
         "@types/morgan": "^1.9.10",
         "@types/multer": "^1.4.13",
         "@types/node": "^24.0.3",
