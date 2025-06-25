@@ -42,3 +42,4 @@ jobs:
             curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK_STAGING }}
           else
             echo "No Render webhook configured for this branch."
+          fi
