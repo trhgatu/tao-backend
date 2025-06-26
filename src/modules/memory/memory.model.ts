@@ -37,11 +37,7 @@ const memorySchema: Schema<IMemory> = new Schema(
     autoTranslated: { type: Boolean, default: false },
     status: {
       type: String,
-      enum: [
-        ContentStatusEnum.PRIVATE,
-        ContentStatusEnum.PUBLIC,
-        ContentStatusEnum.ARCHIVED,
-      ],
+      enum: Object.values(ContentStatusEnum),
       default: ContentStatusEnum.PRIVATE,
     },
     isDeleted: { type: Boolean, default: false },
