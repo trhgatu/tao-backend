@@ -12,7 +12,7 @@ import roleRoutes from '@modules/role/role.route'
 
 //permission route
 import permissionRoutes from '@modules/permission/permission.route'
-
+import blogRoutes from '@modules/blog/blog.route'
 //upload route
 import uploadRoutes from '@modules/upload/upload.route'
 const router = Router()
@@ -22,5 +22,8 @@ router.use('/users', userRoutes)
 router.use('/roles', roleRoutes)
 router.use('/permissions', permissionRoutes)
 router.use('/uploads', uploadRoutes)
+// blog route
+
+router.use('/blogs', blogRoutes)
 
 export default router

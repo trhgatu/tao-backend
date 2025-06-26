@@ -1,52 +1,61 @@
 import { Request, Response, NextFunction } from 'express';
-import * as templateService from './blog.service';
-import { sendResponse } from '@common';
+import * as blogService from './blog.service';
+import { sendPaginatedResponse, sendResponse, buildCommonQuery, AppError } from '@common';
 
-export const getAll = async (_: Request, res: Response, next: NextFunction) => {
+export const getAll = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const data = await templateService.getAllBlogs();
-    sendResponse({ res, message: 'Blogs fetched successfully', data })
+    const page = parseInt(req.query.page as string) || 1
+    const limit = parseInt(req.query.limit as string) || 10
+    const { filters, sort } = buildCommonQuery(req, ['name'])
+    const result = await blogService.getAllBlogs({ page, limit }, filters, sort)
+    sendPaginatedResponse({
+      res,
+      message: 'All blogs fetched',
+      data: result.data,
+      total: result.total,
+      currentPage: result.currentPage,
+      totalPages: result.totalPages,
+    })
   } catch (err) {
-    next(err)
+    next(err);
   }
 };
 
 export const getById = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const data = await templateService.getBlogById(req.params.id)
-    if (!data) return next(new Error('Blog not found'))
-    sendResponse({ res, message: 'Blog found', data })
+    const role = await blogService.getBlogById(req.params.id)
+    if (!role) throw new AppError('Role not found', 404)
+    sendResponse({ res, message: 'Role found', data: role })
   } catch (err) {
     next(err)
   }
-};
+}
 
 export const create = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const data = await templateService.createBlog(req.body)
-    sendResponse({ res, message: 'Blog created successfully', data, statusCode: 201 })
+    const role = await blogService.createBlog(req.body)
+    sendResponse({ res, message: 'Role created', statusCode: 201, data: role })
   } catch (err) {
     next(err)
   }
-};
+}
 
 export const update = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const data = await templateService.updateBlog(req.params.id, req.body)
-    if (!data) return next(new Error('Blog not found to update'))
-    sendResponse({ res, message: 'Blog updated', data })
+    const role = await blogService.updateBlog(req.params.id, req.body)
+    if (!role) throw new AppError('Role not found', 404)
+    sendResponse({ res, message: 'Role updated', data: role })
   } catch (err) {
     next(err)
   }
-};
+}
 
-export const remove = async (req: Request, res: Response, next: NextFunction) => {
+
+export const hardDelete = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    await templateService.deleteBlog(req.params.id)
-    sendResponse({ res, message: 'Blog deleted successfully' })
+    await blogService.deleteBlog(req.params.id);
+    sendResponse({ res, message: 'Blog deleted successfully' });
   } catch (err) {
-    next(err)
+    next(err);
   }
 };
-
-
