@@ -2,6 +2,7 @@
 import mongoose, { Schema, Document } from 'mongoose';
 import slugify from 'slugify';
 import { ContentStatusEnum } from '@shared/enums';
+import { removeVietnameseTones } from '@common';
 
 export interface IBlog extends Document {
   _id: mongoose.Types.ObjectId;
@@ -50,9 +51,10 @@ const blogSchema: Schema<IBlog> = new Schema(
 );
 
 blogSchema.pre('validate', async function (next) {
-  if (!this.isModified('name') && !this.isNew) return next();
+  if (!this.isModified('title') && !this.isNew) return next();
 
-  const baseSlug = slugify(this.title, { lower: true, strict: true });
+  const normalizedTitle = removeVietnameseTones(this.title);
+  const baseSlug = slugify(normalizedTitle, { lower: true, strict: true });
   let slug = baseSlug;
   let count = 1;
 
