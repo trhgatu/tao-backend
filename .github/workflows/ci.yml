@@ -24,7 +24,6 @@ jobs:
       - name: 🧹 Run linter
         run: npm run lint
 
-
       - name: 🔍 TypeScript type check
         run: npm run type-check
 
