@@ -1,5 +1,6 @@
 import mongoose, { Schema, Document } from 'mongoose';
 import slugify from 'slugify';
+import { ContentStatusEnum } from '@shared/enums';
 
 export interface IMemory extends Document {
   _id: mongoose.Types.ObjectId;
@@ -12,7 +13,7 @@ export interface IMemory extends Document {
   tags?: string[];
   translations: Map<string, string>;
   autoTranslated: boolean;
-  status: 'private' | 'public' | 'archived';
+  status: ContentStatusEnum;
   createdAt: Date;
   updatedAt: Date;
   isDeleted?: boolean;
@@ -35,8 +36,12 @@ const memorySchema: Schema<IMemory> = new Schema(
     autoTranslated: { type: Boolean, default: false },
     status: {
       type: String,
-      enum: ['private', 'public', 'archived'],
-      default: 'private',
+      enum: [
+        ContentStatusEnum.PRIVATE,
+        ContentStatusEnum.PUBLIC,
+        ContentStatusEnum.ARCHIVED,
+      ],
+      default: ContentStatusEnum.PRIVATE,
     },
     isDeleted: { type: Boolean, default: false },
   },

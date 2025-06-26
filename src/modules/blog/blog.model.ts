@@ -1,6 +1,7 @@
 // src/modules/blog/blog.model.ts
 import mongoose, { Schema, Document } from 'mongoose';
 import slugify from 'slugify';
+import { ContentStatusEnum } from '@shared/enums';
 
 export interface IBlog extends Document {
   _id: mongoose.Types.ObjectId;
@@ -12,7 +13,7 @@ export interface IBlog extends Document {
   tags: string[];
   coverImage?: string;
   publishedAt?: Date;
-  status: 'draft' | 'published' | 'archived';
+  status: ContentStatusEnum;
   createdAt: Date;
   updatedAt: Date;
   isDeleted?: boolean;
@@ -34,8 +35,12 @@ const blogSchema: Schema<IBlog> = new Schema(
     publishedAt: { type: Date },
     status: {
       type: String,
-      enum: ['draft', 'published', 'archived'],
-      default: 'draft',
+      enum: [
+        ContentStatusEnum.DRAFT,
+        ContentStatusEnum.PUBLISHED,
+        ContentStatusEnum.ARCHIVED,
+      ],
+      default: ContentStatusEnum.DRAFT,
     },
     isDeleted: { type: Boolean, default: false },
   },
