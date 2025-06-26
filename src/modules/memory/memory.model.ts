@@ -1,46 +1,47 @@
-// src/modules/blog/blog.model.ts
 import mongoose, { Schema, Document } from 'mongoose';
 import slugify from 'slugify';
 import { ContentStatusEnum } from '@shared/enums';
 
-export interface IBlog extends Document {
+export interface IMemory extends Document {
   _id: mongoose.Types.ObjectId;
   title: string;
   slug: string;
-  rawContent: string;
+  description?: string;
+  imageUrl?: string;
+  location?: string;
+  date?: Date;
+  tags?: string[];
   translations: Map<string, string>;
   autoTranslated: boolean;
-  tags: string[];
-  coverImage?: string;
-  publishedAt?: Date;
   status: ContentStatusEnum;
   createdAt: Date;
   updatedAt: Date;
   isDeleted?: boolean;
 }
 
-const blogSchema: Schema<IBlog> = new Schema(
+const memorySchema: Schema<IMemory> = new Schema(
   {
-    title: { type: String, trim: true },
+    title: { type: String, required: true, trim: true },
+    description: { type: String },
     slug: { type: String, unique: true },
-    rawContent: { type: String },
+    imageUrl: { type: String },
+    location: { type: String },
+    date: { type: Date },
+    tags: [{ type: String }],
     translations: {
       type: Map,
       of: String,
       default: {},
     },
     autoTranslated: { type: Boolean, default: false },
-    tags: [{ type: String }],
-    coverImage: { type: String },
-    publishedAt: { type: Date },
     status: {
       type: String,
       enum: [
-        ContentStatusEnum.DRAFT,
-        ContentStatusEnum.PUBLISHED,
+        ContentStatusEnum.PRIVATE,
+        ContentStatusEnum.PUBLIC,
         ContentStatusEnum.ARCHIVED,
       ],
-      default: ContentStatusEnum.DRAFT,
+      default: ContentStatusEnum.PRIVATE,
     },
     isDeleted: { type: Boolean, default: false },
   },
@@ -49,14 +50,14 @@ const blogSchema: Schema<IBlog> = new Schema(
   }
 );
 
-blogSchema.pre('validate', async function (next) {
+memorySchema.pre('validate', async function (next) {
   if (!this.isModified('name') && !this.isNew) return next();
 
   const baseSlug = slugify(this.title, { lower: true, strict: true });
   let slug = baseSlug;
   let count = 1;
 
-  while (await Blog.exists({ slug })) {
+  while (await Memory.exists({ slug })) {
     slug = `${baseSlug}-${count++}`;
   }
 
@@ -64,6 +65,6 @@ blogSchema.pre('validate', async function (next) {
   next();
 });
 
-const Blog = mongoose.model<IBlog>('Blog', blogSchema, 'blogs');
+const Memory = mongoose.model<IMemory>('Memory', memorySchema, 'memories');
 
-export default Blog;
+export default Memory;

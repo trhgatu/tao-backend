@@ -13,6 +13,7 @@ import roleRoutes from '@modules/role/role.route';
 //permission route
 import permissionRoutes from '@modules/permission/permission.route';
 import blogRoutes from '@modules/blog/blog.route';
+import memoryRoutes from '@modules/memory/memory.route';
 //upload route
 import uploadRoutes from '@modules/upload/upload.route';
 const router = Router();
@@ -25,5 +26,6 @@ router.use('/uploads', uploadRoutes);
 // blog route
 
 router.use('/blogs', blogRoutes);
+router.use('/memories', memoryRoutes);
 
 export default router;
