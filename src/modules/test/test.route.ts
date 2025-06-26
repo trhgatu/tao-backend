@@ -1,11 +1,11 @@
 // src/modules/test/test.route.ts
-import { Router } from 'express'
-import { testValidation } from './test.controller'
-import { validate } from '@middlewares/validate.middleware'
-import { testSchema } from '@modules/test/test.validator'
+import { Router } from 'express';
+import { testValidation } from './test.controller';
+import { validate } from '@middlewares/validate.middleware';
+import { testSchema } from '@modules/test/test.validator';
 
-const router = Router()
+const router = Router();
 
-router.post('/zod', validate(testSchema), testValidation)
+router.post('/zod', validate(testSchema), testValidation);
 
-export default router
+export default router;

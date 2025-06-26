@@ -6,5 +6,5 @@ export enum LogAction {
   LOGIN = 'login',
   LOGOUT = 'logout',
   RESET_PASSWORD = 'reset-password',
-  UPDATE_PROFILE = 'update-profile'
+  UPDATE_PROFILE = 'update-profile',
 }

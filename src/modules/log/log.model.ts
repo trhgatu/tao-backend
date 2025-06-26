@@ -1,23 +1,23 @@
-import mongoose from 'mongoose'
-import { Schema, Types } from 'mongoose'
+import mongoose from 'mongoose';
+import { Schema, Types } from 'mongoose';
 
 export interface IAuditLog {
-  userId?: Types.ObjectId
-  action?: string
-  targetModel?: string
-  targetId?: Types.ObjectId | string,
-  description?: string,
-  method: string
-  path: string
-  statusCode: number
-  duration: number
+  userId?: Types.ObjectId;
+  action?: string;
+  targetModel?: string;
+  targetId?: Types.ObjectId | string;
+  description?: string;
+  method: string;
+  path: string;
+  statusCode: number;
+  duration: number;
   metadata: {
-    body?: Record<string, unknown>
-    query?: Record<string, unknown>
-    params?: Record<string, unknown>
-    ip?: string
-  }
-  createdAt: Date
+    body?: Record<string, unknown>;
+    query?: Record<string, unknown>;
+    params?: Record<string, unknown>;
+    ip?: string;
+  };
+  createdAt: Date;
 }
 
 const auditLogSchema: Schema<IAuditLog> = new Schema(
@@ -34,8 +34,12 @@ const auditLogSchema: Schema<IAuditLog> = new Schema(
     metadata: Object,
   },
   { timestamps: { createdAt: true, updatedAt: false } }
-)
+);
 
-const AuditLog = mongoose.model<IAuditLog>('AuditLog', auditLogSchema, 'audit_logs');
+const AuditLog = mongoose.model<IAuditLog>(
+  'AuditLog',
+  auditLogSchema,
+  'audit_logs'
+);
 
-export default AuditLog
+export default AuditLog;

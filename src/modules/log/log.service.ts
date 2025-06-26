@@ -1,4 +1,4 @@
-import Log from './log.model'
+import Log from './log.model';
 import { CreateLogInput, UpdateLogInput } from './dtos/log.dto';
 
 export const getAllLogs = () => Log.find().sort({ createdAt: -1 });

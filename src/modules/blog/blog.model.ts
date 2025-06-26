@@ -15,7 +15,7 @@ export interface IBlog extends Document {
   status: 'draft' | 'published' | 'archived';
   createdAt: Date;
   updatedAt: Date;
-  isDeleted?: boolean
+  isDeleted?: boolean;
 }
 
 const blogSchema: Schema<IBlog> = new Schema(

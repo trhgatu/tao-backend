@@ -1,8 +1,8 @@
-import { paginate } from '@common'
-import { CreateBlogInput, UpdateBlogInput } from './dtos'
-import type { PaginationParams, PaginationResult } from '@common'
-import { getCache, setCache, deleteKeysByPattern } from '@shared/services'
-import Blog, { IBlog } from '@modules/blog/blog.model'
+import { paginate } from '@common';
+import { CreateBlogInput, UpdateBlogInput } from './dtos';
+import type { PaginationParams, PaginationResult } from '@common';
+import { getCache, setCache, deleteKeysByPattern } from '@shared/services';
+import Blog, { IBlog } from '@modules/blog/blog.model';
 
 export const getAllBlogs = async (
   { page, limit }: PaginationParams,
@@ -11,45 +11,45 @@ export const getAllBlogs = async (
 ): Promise<PaginationResult<IBlog>> => {
   const finalFilters = {
     isDeleted: false,
-    ...filters
-  }
+    ...filters,
+  };
 
-  const cacheKey = `blogs:page=${page}:limit=${limit}:filters=${JSON.stringify(finalFilters)}:sort=${JSON.stringify(sort)}`
-  const cached = await getCache<PaginationResult<IBlog>>(cacheKey)
-  if (cached) return cached
+  const cacheKey = `blogs:page=${page}:limit=${limit}:filters=${JSON.stringify(finalFilters)}:sort=${JSON.stringify(sort)}`;
+  const cached = await getCache<PaginationResult<IBlog>>(cacheKey);
+  if (cached) return cached;
 
   const result = await paginate(
     Blog,
     { page, limit },
     finalFilters,
-    sort,
+    sort
     //populate options can be added here if needed
-  )
+  );
 
-  await setCache(cacheKey, result)
-  return result
-}
+  await setCache(cacheKey, result);
+  return result;
+};
 
 export const getBlogById = (id: string) => {
-  return Blog.findById(id)
-}
+  return Blog.findById(id);
+};
 
 export const createBlog = async (payload: CreateBlogInput) => {
-  const blog = await Blog.create(payload)
+  const blog = await Blog.create(payload);
   // Clear cache for blogs after creation
-  await deleteKeysByPattern('blogs:*')
+  await deleteKeysByPattern('blogs:*');
   return blog;
-}
+};
 
 export const updateBlog = async (id: string, payload: UpdateBlogInput) => {
-  const blog = Blog.findByIdAndUpdate(id, payload, { new: true })
+  const blog = Blog.findByIdAndUpdate(id, payload, { new: true });
   // Clear cache for blogs after update
-  await deleteKeysByPattern('blogs:*')
-  return blog
-}
+  await deleteKeysByPattern('blogs:*');
+  return blog;
+};
 
 export const deleteBlog = async (id: string) => {
-  const blog = Blog.findByIdAndDelete(id)
-  await deleteKeysByPattern('blogs:*')
-  return blog
-}
+  const blog = Blog.findByIdAndDelete(id);
+  await deleteKeysByPattern('blogs:*');
+  return blog;
+};

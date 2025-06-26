@@ -26,7 +26,8 @@ export const paginate = async <T>(
   const skip = (page - 1) * limit;
 
   try {
-    let dbQuery = model.find(query)
+    let dbQuery = model
+      .find(query)
       .select(select)
       .sort(sort)
       .skip(skip)

@@ -1,26 +1,31 @@
-import { Request, Response, NextFunction } from 'express'
-import AuditLog from '@modules/log/log.model'
-import { Types } from 'mongoose'
-import { LogAction } from '@shared/enums'
+import { Request, Response, NextFunction } from 'express';
+import AuditLog from '@modules/log/log.model';
+import { Types } from 'mongoose';
+import { LogAction } from '@shared/enums';
 
 interface CreateAuditLogOptions {
-  action?: LogAction
-  targetModel?: string
-  targetId?: string | Types.ObjectId | ((req: Request) => string | Types.ObjectId)
-  description?: string | ((req: Request) => string)
+  action?: LogAction;
+  targetModel?: string;
+  targetId?:
+    | string
+    | Types.ObjectId
+    | ((req: Request) => string | Types.ObjectId);
+  description?: string | ((req: Request) => string);
 }
 
 export const createAuditLog = (options: CreateAuditLogOptions = {}) => {
   return (req: Request, res: Response, next: NextFunction) => {
-    const start = Date.now()
+    const start = Date.now();
 
     res.on('finish', async () => {
       try {
-        const duration = Date.now() - start
-        const user = req.user
+        const duration = Date.now() - start;
+        const user = req.user;
 
         const resolvedTargetId =
-          typeof options.targetId === 'function' ? options.targetId(req) : options.targetId
+          typeof options.targetId === 'function'
+            ? options.targetId(req)
+            : options.targetId;
 
         const resolvedDescription =
           typeof options.description === 'function'
@@ -28,7 +33,7 @@ export const createAuditLog = (options: CreateAuditLogOptions = {}) => {
             : options.description ||
               `${user?.email || 'Unknown'} performed ${options.action || req.method} on ${
                 options.targetModel || req.originalUrl
-              }`
+              }`;
 
         const log = new AuditLog({
           userId: user?._id || null,
@@ -46,15 +51,15 @@ export const createAuditLog = (options: CreateAuditLogOptions = {}) => {
             params: req.params,
             ip: req.ip,
           },
-        })
+        });
 
-        await log.save()
+        await log.save();
       } catch {
         // TODO: Replace with proper logger in production
         // console.error('[AuditLog] Failed:', err)
       }
-    })
+    });
 
-    next()
-  }
-}
+    next();
+  };
+};

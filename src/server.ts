@@ -17,7 +17,7 @@ async function startServer() {
   await connectMongoDB();
   if (!redisClient.isOpen) {
     await redisClient.connect();
-    log.info("Connected to Redis Cloud");
+    log.info('Connected to Redis Cloud');
   }
   httpServer.listen(port, () => {
     log.info(`🚀 Server running at http://localhost:${port}`);
