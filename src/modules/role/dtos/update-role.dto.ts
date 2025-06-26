@@ -1,5 +1,5 @@
 export interface UpdateRoleInput {
-  name?: string
-  description?: string
-  isActive?: boolean
+  name?: string;
+  description?: string;
+  isActive?: boolean;
 }

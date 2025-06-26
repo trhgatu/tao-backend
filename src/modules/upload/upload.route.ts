@@ -1,9 +1,9 @@
-import express from 'express'
-import { uploadImage } from './upload.controller'
-import { uploadMiddleware } from '@middlewares'
+import express from 'express';
+import { uploadImage } from './upload.controller';
+import { uploadMiddleware } from '@middlewares';
 
-const router = express.Router()
+const router = express.Router();
 
-router.post('/upload-image', uploadMiddleware.single('image'), uploadImage)
+router.post('/upload-image', uploadMiddleware.single('image'), uploadImage);
 
-export default router
+export default router;

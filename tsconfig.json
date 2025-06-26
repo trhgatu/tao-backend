@@ -3,15 +3,10 @@
     "target": "ES2020",
     "module": "CommonJS",
     "moduleResolution": "node",
-    "lib": [
-      "ES2020"
-    ],
+    "lib": ["ES2020"],
     "rootDir": "src",
     "outDir": "dist",
-    "types": [
-      "node",
-      "express"
-    ],
+    "types": ["node", "express"],
     "strict": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
@@ -20,53 +15,21 @@
     "resolveJsonModule": true,
     "baseUrl": "./src",
     "paths": {
-      "@config/*": [
-        "config/*"
-      ],
-      "@middlewares/*": [
-        "core/middleware/*"
-      ],
-      "@middlewares": [
-        "core/middleware/index.ts"
-      ],
-      "@common/*": [
-        "core/utils/*"
-      ],
-      "@common": [
-        "core/utils/index.ts"
-      ],
-      "@modules/*": [
-        "modules/*"
-      ],
-      "@routes/*": [
-        "routes/*"
-      ],
-      "@types/*": [
-        "core/types/*"
-      ],
-      "@shared/*": [
-        "shared/*"
-      ],
-      "@socket": [
-        "socket/index.ts"
-      ],
-      "@socket/*": [
-        "socket/*"
-      ],
-      "@usecases/*": [
-        "usecases/*"
-      ]
+      "@config/*": ["config/*"],
+      "@middlewares/*": ["core/middleware/*"],
+      "@middlewares": ["core/middleware/index.ts"],
+      "@common/*": ["core/utils/*"],
+      "@common": ["core/utils/index.ts"],
+      "@modules/*": ["modules/*"],
+      "@routes/*": ["routes/*"],
+      "@types/*": ["core/types/*"],
+      "@shared/*": ["shared/*"],
+      "@socket": ["socket/index.ts"],
+      "@socket/*": ["socket/*"],
+      "@usecases/*": ["usecases/*"]
     },
-    "typeRoots": [
-      "./src/core/types",
-      "./node_modules/@types"
-    ]
+    "typeRoots": ["./src/core/types", "./node_modules/@types"]
   },
-  "include": [
-    "src"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist"
-  ]
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
 }

@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import { z } from 'zod';
 
 export const UpdateProfileSchema = z.object({
   fullName: z.string().min(1).optional(),
@@ -8,6 +8,6 @@ export const UpdateProfileSchema = z.object({
   gender: z.enum(['male', 'female', 'other']).optional(),
   birthDate: z.string().datetime().optional(),
   phone: z.string().optional(),
-})
+});
 
-export type UpdateProfileDto = z.infer<typeof UpdateProfileSchema>
+export type UpdateProfileDto = z.infer<typeof UpdateProfileSchema>;

@@ -9,11 +9,15 @@ export default defineConfig([
   ...tseslint.configs.recommended,
 
   {
-    files: ['**/*.{js,ts}'], languageOptions: { globals: globals.node },
+    files: ['**/*.{js,ts}'],
+    languageOptions: { globals: globals.node },
     rules: {
       'no-console': 'warn',
       '@typescript-eslint/no-explicit-any': 'warn',
-      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        { argsIgnorePattern: '^_' },
+      ],
     },
   },
 

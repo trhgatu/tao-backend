@@ -7,5 +7,5 @@ export function isErrorWithName(
     error !== null &&
     'name' in error &&
     (error as Record<string, unknown>).name === name
-  )
+  );
 }

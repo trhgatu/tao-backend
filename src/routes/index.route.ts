@@ -1,26 +1,29 @@
 // src/routes/index.route.ts
-import { Router } from 'express'
+import { Router } from 'express';
 
 //auth route
-import authRoutes from '@modules/auth/auth.route'
+import authRoutes from '@modules/auth/auth.route';
 
 //user route
-import userRoutes from '@modules/user/user.route'
+import userRoutes from '@modules/user/user.route';
 
 //role route
-import roleRoutes from '@modules/role/role.route'
+import roleRoutes from '@modules/role/role.route';
 
 //permission route
-import permissionRoutes from '@modules/permission/permission.route'
-
+import permissionRoutes from '@modules/permission/permission.route';
+import blogRoutes from '@modules/blog/blog.route';
 //upload route
-import uploadRoutes from '@modules/upload/upload.route'
-const router = Router()
+import uploadRoutes from '@modules/upload/upload.route';
+const router = Router();
 
-router.use('/auth', authRoutes)
-router.use('/users', userRoutes)
-router.use('/roles', roleRoutes)
-router.use('/permissions', permissionRoutes)
-router.use('/uploads', uploadRoutes)
+router.use('/auth', authRoutes);
+router.use('/users', userRoutes);
+router.use('/roles', roleRoutes);
+router.use('/permissions', permissionRoutes);
+router.use('/uploads', uploadRoutes);
+// blog route
 
-export default router
+router.use('/blogs', blogRoutes);
+
+export default router;

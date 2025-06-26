@@ -46,4 +46,6 @@ if (fs.existsSync(TARGET_DIR)) {
 }
 
 copyFolder(TEMPLATE_DIR, TARGET_DIR);
-log.info(`Module "${moduleName}" has been created at src/modules/${moduleName}`);
+log.info(
+  `Module "${moduleName}" has been created at src/modules/${moduleName}`
+);
