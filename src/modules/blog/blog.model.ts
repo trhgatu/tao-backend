@@ -36,11 +36,7 @@ const blogSchema: Schema<IBlog> = new Schema(
     publishedAt: { type: Date },
     status: {
       type: String,
-      enum: [
-        ContentStatusEnum.DRAFT,
-        ContentStatusEnum.PUBLISHED,
-        ContentStatusEnum.ARCHIVED,
-      ],
+      enum: Object.values(ContentStatusEnum),
       default: ContentStatusEnum.DRAFT,
     },
     isDeleted: { type: Boolean, default: false },
