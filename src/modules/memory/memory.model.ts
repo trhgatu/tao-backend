@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document } from 'mongoose';
 import slugify from 'slugify';
-import { ContentStatusEnum } from '@shared/enums';
+import { ContentStatusEnum, MemoryMoodEnum } from '@shared/enums';
 import { removeVietnameseTones } from '@common';
 
 export interface IMemory extends Document {
@@ -10,6 +10,7 @@ export interface IMemory extends Document {
   description?: string;
   imageUrl?: string;
   location?: string;
+  mood: MemoryMoodEnum;
   date?: Date;
   tags?: string[];
   translations: Map<string, string>;
@@ -27,6 +28,11 @@ const memorySchema: Schema<IMemory> = new Schema(
     slug: { type: String, unique: true },
     imageUrl: { type: String },
     location: { type: String },
+    mood: {
+      type: String,
+      enum: Object.values(MemoryMoodEnum),
+      default: MemoryMoodEnum.PEACEFUL,
+    },
     date: { type: Date },
     tags: [{ type: String }],
     translations: {
