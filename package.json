@@ -12,7 +12,7 @@
     "type-check": "tsc --noEmit",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "postinstall": "if [ \"$CI\" != \"true\" ]; then husky install; fi"
+    "postinstall": "sh -c '[ \"$CI\" != \"true\" ] && husky install'"
   },
   "lint-staged": {
     "**/*.{ts,tsx,js,jsx}": [
