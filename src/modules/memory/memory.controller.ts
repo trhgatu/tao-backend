@@ -6,7 +6,6 @@ import {
   buildCommonQuery,
   AppError,
 } from '@common';
-import logger from '@common/logger';
 
 export const getAll = async (
   req: Request,
@@ -57,7 +56,6 @@ export const create = async (
 ) => {
   try {
     const memory = await memoryService.createMemory(req.body);
-    logger.info(req.body);
     sendResponse({
       res,
       message: 'Memory created',

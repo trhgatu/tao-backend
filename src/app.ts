@@ -11,7 +11,12 @@ import { errorHandler, notFound } from './core/middleware';
 const app = express();
 
 app.use(helmet());
-app.use(cors());
+app.use(
+  cors({
+    origin: ['http://localhost:3001', 'https://the-archive-of-one.vercel.app'],
+    credentials: true,
+  })
+);
 app.use(compression());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
