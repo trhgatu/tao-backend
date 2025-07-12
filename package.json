@@ -11,8 +11,7 @@
     "lint": "eslint . --ext .ts",
     "type-check": "tsc --noEmit",
     "format": "prettier --write .",
-    "format:check": "prettier --check .",
-    "postinstall": "sh -c '[ \"$CI\" != \"true\" ] && husky install'"
+    "format:check": "prettier --check ."
   },
   "lint-staged": {
     "**/*.{ts,tsx,js,jsx}": [
