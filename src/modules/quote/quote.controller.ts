@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
-import * as memoryService from './memory.service';
+import * as quoteService from './quote.service';
 import {
-  sendPaginatedResponse,
   sendResponse,
+  sendPaginatedResponse,
   buildCommonQuery,
   AppError,
 } from '@common';
@@ -15,8 +15,9 @@ export const getAll = async (
   try {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
-    const { filters, sort } = buildCommonQuery(req, ['title']);
-    const result = await memoryService.getAllMemories(
+    const { filters, sort } = buildCommonQuery(req, ['text', 'author', 'tags']);
+
+    const result = await quoteService.getAllQuotes(
       { page, limit },
       filters,
       sort
@@ -24,7 +25,7 @@ export const getAll = async (
 
     sendPaginatedResponse({
       res,
-      message: 'All memories fetched',
+      message: 'Quotes fetched successfully',
       data: result.data,
       total: result.total,
       currentPage: result.currentPage,
@@ -41,9 +42,10 @@ export const getById = async (
   next: NextFunction
 ) => {
   try {
-    const memory = await memoryService.getMemoryById(req.params.id);
-    if (!memory) throw new AppError('Memory not found', 404);
-    sendResponse({ res, message: 'Memory found', data: memory });
+    const data = await quoteService.getQuoteById(req.params.id);
+    if (!data) throw new AppError('Quote not found', 404);
+
+    sendResponse({ res, message: 'Quote found', data });
   } catch (err) {
     next(err);
   }
@@ -55,12 +57,13 @@ export const create = async (
   next: NextFunction
 ) => {
   try {
-    const memory = await memoryService.createMemory(req.body);
+    const data = await quoteService.createQuote(req.body);
+
     sendResponse({
       res,
-      message: 'Memory created',
+      message: 'Quote created successfully',
+      data,
       statusCode: 201,
-      data: memory,
     });
   } catch (err) {
     next(err);
@@ -73,22 +76,10 @@ export const update = async (
   next: NextFunction
 ) => {
   try {
-    const memory = await memoryService.updateMemory(req.params.id, req.body);
-    if (!memory) throw new AppError('Memory not found', 404);
-    sendResponse({ res, message: 'Memory updated', data: memory });
-  } catch (err) {
-    next(err);
-  }
-};
+    const data = await quoteService.updateQuote(req.params.id, req.body);
+    if (!data) throw new AppError('Quote not found', 404);
 
-export const softDelete = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const memory = await memoryService.softDeleteMemory(req.params.id);
-    sendResponse({ res, message: 'Memory deleted successfully', data: memory });
+    sendResponse({ res, message: 'Quote updated', data });
   } catch (err) {
     next(err);
   }
@@ -100,8 +91,8 @@ export const hardDelete = async (
   next: NextFunction
 ) => {
   try {
-    await memoryService.hardDeleteMemory(req.params.id);
-    sendResponse({ res, message: 'Memory deleted successfully' });
+    await quoteService.deleteQuote(req.params.id);
+    sendResponse({ res, message: 'Quote deleted successfully' });
   } catch (err) {
     next(err);
   }
