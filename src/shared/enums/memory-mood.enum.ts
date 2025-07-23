@@ -3,4 +3,6 @@ export enum MemoryMoodEnum {
   NOSTALGIC = 'nostalgic',
   PEACEFUL = 'peaceful',
   EXCITED = 'excited',
+  GRATEFUL = 'grateful',
+  REFLECTIVE = 'reflective',
 }

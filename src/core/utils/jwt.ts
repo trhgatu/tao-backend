@@ -4,7 +4,7 @@ import { IUser } from '@modules/user/user.model';
 const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET || 'access_secret';
 const REFRESH_TOKEN_SECRET =
   process.env.REFRESH_TOKEN_SECRET || 'refresh_secret';
-const ACCESS_TOKEN_EXPIRES_IN = '15m';
+const ACCESS_TOKEN_EXPIRES_IN = '10m';
 const REFRESH_TOKEN_EXPIRES_IN = '7d';
 
 export interface AccessTokenPayload {

@@ -39,8 +39,20 @@ export const updateMemory = async (id: string, payload: UpdateMemoryInput) => {
   return memory;
 };
 
-export const deleteMemory = async (id: string) => {
+export const hardDeleteMemory = async (id: string) => {
   const memory = await Memory.findByIdAndDelete(id);
+  await deleteKeysByPattern('memories:*');
+  return memory;
+};
+
+export const softDeleteMemory = async (id: string) => {
+  const memory = await Memory.findById(id);
+  if (!memory) return null;
+
+  memory.isDeleted = true;
+  memory.deletedAt = new Date();
+
+  await memory.save();
   await deleteKeysByPattern('memories:*');
   return memory;
 };

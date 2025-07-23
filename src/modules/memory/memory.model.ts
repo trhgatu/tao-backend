@@ -18,6 +18,7 @@ export interface IMemory extends Document {
   status: ContentStatusEnum;
   createdAt: Date;
   updatedAt: Date;
+  deletedAt?: Date;
   isDeleted?: boolean;
 }
 
@@ -47,6 +48,7 @@ const memorySchema: Schema<IMemory> = new Schema(
       default: ContentStatusEnum.PRIVATE,
     },
     isDeleted: { type: Boolean, default: false },
+    deletedAt: { type: Date },
   },
   {
     timestamps: true,
