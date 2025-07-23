@@ -3,14 +3,16 @@ import { v4 as uuidv4 } from 'uuid';
 
 export const uploadImageToSupabase = async (
   fileBuffer: Buffer,
-  mimetype: string
+  mimetype: string,
+  folder = ''
 ) => {
   const extension = mimetype.split('/')[1];
   const fileName = `${uuidv4()}.${extension}`;
+  const filePath = folder ? `${folder}/${fileName}` : fileName;
 
   const { error } = await supabase.storage
     .from('uploads')
-    .upload(fileName, fileBuffer, {
+    .upload(filePath, fileBuffer, {
       contentType: mimetype,
     });
 
@@ -18,7 +20,7 @@ export const uploadImageToSupabase = async (
 
   const { data: publicUrl } = supabase.storage
     .from('uploads')
-    .getPublicUrl(fileName);
+    .getPublicUrl(filePath);
 
   return publicUrl?.publicUrl;
 };
