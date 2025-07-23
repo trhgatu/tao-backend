@@ -9,10 +9,11 @@ export const uploadImage = async (
 ) => {
   try {
     const file = req.file;
+    const folder = (req.query.folder as string) || '';
 
     if (!file) throw new AppError('No file uploaded', 400);
 
-    const url = await uploadImageToSupabase(file.buffer, file.mimetype);
+    const url = await uploadImageToSupabase(file.buffer, file.mimetype, folder);
 
     sendResponse({ res, message: 'Image uploaded', data: { url } });
   } catch (err) {
