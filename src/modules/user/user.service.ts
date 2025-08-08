@@ -1,7 +1,7 @@
 import User, { IUser } from '@modules/user/user.model';
-import { AppError, paginate } from '@common';
+import { AppError, paginate } from '@core';
 import { UpdateProfileDto } from './dtos';
-import type { PaginationParams, PaginationResult } from '@common';
+import type { PaginationParams, PaginationResult } from '@core';
 import { getCache, setCache } from '@shared/services';
 
 export const getMe = async (userId: string) => {

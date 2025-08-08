@@ -1,5 +1,5 @@
 import { redisClient } from '@config/redis';
-import log from '@common/logger';
+import log from '@core/logger';
 
 export const getCache = async <T = unknown>(key: string): Promise<T | null> => {
   try {

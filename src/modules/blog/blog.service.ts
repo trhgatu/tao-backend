@@ -1,6 +1,6 @@
-import { paginate } from '@common';
+import { paginate } from '@core';
 import { CreateBlogInput, UpdateBlogInput } from './dtos';
-import type { PaginationParams, PaginationResult } from '@common';
+import type { PaginationParams, PaginationResult } from '@core';
 import { getCache, setCache, deleteKeysByPattern } from '@shared/services';
 import Blog, { IBlog } from '@modules/blog/blog.model';
 

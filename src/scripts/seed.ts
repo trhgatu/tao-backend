@@ -8,7 +8,7 @@ import Role from '@modules/role/role.model';
 import User from '@modules/user/user.model';
 import Permission from '@modules/permission/permission.model';
 
-import log from '@common/logger';
+import log from '@core/logger';
 
 dotenv.config();
 

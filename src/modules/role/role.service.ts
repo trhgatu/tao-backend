@@ -1,7 +1,7 @@
 import Role, { IRole } from '@modules/role/role.model';
-import { paginate } from '@common';
+import { paginate } from '@core';
 import { CreateRoleInput, UpdateRoleInput } from './dtos';
-import type { PaginationParams, PaginationResult } from '@common';
+import type { PaginationParams, PaginationResult } from '@core';
 import { getCache, setCache, deleteKeysByPattern } from '@shared/services';
 
 export const getAllRoles = async (

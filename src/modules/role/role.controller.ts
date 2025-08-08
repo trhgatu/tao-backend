@@ -5,7 +5,7 @@ import {
   sendResponse,
   sendPaginatedResponse,
   buildCommonQuery,
-} from '@common';
+} from '@core';
 
 export const getAll = async (
   req: Request,

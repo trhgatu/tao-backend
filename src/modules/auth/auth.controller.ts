@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import * as authService from './auth.service';
-import { getUserId, sendResponse } from '@common';
+import { getUserId, sendResponse } from '@core';
 
 export const register = async (
   req: Request,

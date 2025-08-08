@@ -1,4 +1,4 @@
-import log from '@common/logger';
+import log from '@core/logger';
 import fs from 'fs';
 import path from 'path';
 

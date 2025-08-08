@@ -1,6 +1,6 @@
 import { Server } from 'socket.io';
 import http from 'http';
-import log from '@common/logger';
+import log from '@core/logger';
 
 let io: Server;
 

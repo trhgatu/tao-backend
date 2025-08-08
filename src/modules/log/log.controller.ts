@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import * as templateService from './log.service';
-import { sendResponse } from '@common';
+import { sendResponse } from '@core';
 
 export const getAll = async (_: Request, res: Response, next: NextFunction) => {
   try {

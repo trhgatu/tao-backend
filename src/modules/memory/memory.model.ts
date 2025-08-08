@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document } from 'mongoose';
 import slugify from 'slugify';
 import { ContentStatusEnum, MemoryMoodEnum } from '@shared/enums';
-import { removeVietnameseTones } from '@common';
+import { removeVietnameseTones } from '@core';
 
 export interface IMemory extends Document {
   _id: mongoose.Types.ObjectId;

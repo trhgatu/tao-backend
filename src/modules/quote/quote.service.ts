@@ -1,8 +1,8 @@
-import { paginate } from '@common';
+import { paginate } from '@core';
 import { getCache, setCache, deleteKeysByPattern } from '@shared/services';
 import Quote, { IQuote } from './quote.model';
 import type { CreateQuoteInput, UpdateQuoteInput } from './dtos/quote.dto';
-import type { PaginationParams, PaginationResult } from '@common';
+import type { PaginationParams, PaginationResult } from '@core';
 
 export const getAllQuotes = async (
   { page, limit }: PaginationParams,

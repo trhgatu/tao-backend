@@ -1,4 +1,4 @@
-import log from '@common/logger';
+import log from '@core/logger';
 import { createClient } from 'redis';
 
 export const redisClient = createClient({
