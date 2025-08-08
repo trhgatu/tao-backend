@@ -1,16 +1,33 @@
 // src/modules/blog/blog.model.ts
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema, Document, Model } from 'mongoose';
 import slugify from 'slugify';
 import { ContentStatusEnum } from '@shared/enums';
-import { removeVietnameseTones } from '@common';
+import { removeVietnameseTones, LocaleCode, pickLocale } from '@core';
+
+export interface LocaleText {
+  text: string;
+  auto?: boolean;
+  updatedAt?: Date;
+  updatedBy?: mongoose.Types.ObjectId;
+}
+
+const LocaleTextSchema = new Schema<LocaleText>(
+  {
+    text: { type: String, required: true },
+    auto: { type: Boolean, default: false },
+    updatedAt: { type: Date },
+    updatedBy: { type: Schema.Types.ObjectId, ref: 'User' },
+  },
+  { _id: false }
+);
 
 export interface IBlog extends Document {
   _id: mongoose.Types.ObjectId;
-  title: string;
+
+  i18nTitle: Map<LocaleCode, LocaleText>;
+  i18nContent: Map<LocaleCode, LocaleText>;
+
   slug: string;
-  rawContent: string;
-  translations: Map<string, string>;
-  autoTranslated: boolean;
   tags: string[];
   coverImage?: string;
   publishedAt?: Date;
@@ -18,19 +35,25 @@ export interface IBlog extends Document {
   createdAt: Date;
   updatedAt: Date;
   isDeleted?: boolean;
+
+  getLocalized(lang?: LocaleCode): { title: string; content: string };
 }
 
-const blogSchema: Schema<IBlog> = new Schema(
+type BlogModelType = Model<IBlog>;
+
+const blogSchema = new Schema<IBlog, BlogModelType>(
   {
-    title: { type: String, trim: true },
-    slug: { type: String, unique: true },
-    rawContent: { type: String },
-    translations: {
+    i18nTitle: {
       type: Map,
-      of: String,
+      of: LocaleTextSchema,
       default: {},
     },
-    autoTranslated: { type: Boolean, default: false },
+    i18nContent: {
+      type: Map,
+      of: LocaleTextSchema,
+      default: {},
+    },
+    slug: { type: String, unique: true },
     tags: [{ type: String }],
     coverImage: { type: String },
     publishedAt: { type: Date },
@@ -41,20 +64,33 @@ const blogSchema: Schema<IBlog> = new Schema(
     },
     isDeleted: { type: Boolean, default: false },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
-blogSchema.pre('validate', async function (next) {
-  if (!this.isModified('title') && !this.isNew) return next();
+// Method: lấy title/content theo lang, fallback 'vi'
+blogSchema.methods.getLocalized = function (lang: LocaleCode = 'vi') {
+  return {
+    title: pickLocale(this.i18nTitle, lang),
+    content: pickLocale(this.i18nContent, lang),
+  };
+};
 
-  const normalizedTitle = removeVietnameseTones(this.title);
-  const baseSlug = slugify(normalizedTitle, { lower: true, strict: true });
+// Hook tạo slug từ title (ưu tiên 'vi', fallback 'en')
+blogSchema.pre<IBlog>('validate', async function (next) {
+  if (!this.isNew && !this.isModified('i18nTitle')) return next();
+
+  const baseTitle =
+    this.i18nTitle.get('vi')?.text || this.i18nTitle.get('en')?.text || 'blog';
+
+  const normalizedTitle = removeVietnameseTones(baseTitle);
+  const baseSlug =
+    slugify(normalizedTitle || 'blog', { lower: true, strict: true }) || 'blog';
+
   let slug = baseSlug;
   let count = 1;
 
-  while (await Blog.exists({ slug })) {
+  const BlogModel = this.constructor as BlogModelType;
+  while (await BlogModel.exists({ slug })) {
     slug = `${baseSlug}-${count++}`;
   }
 
@@ -62,6 +98,5 @@ blogSchema.pre('validate', async function (next) {
   next();
 });
 
-const Blog = mongoose.model<IBlog>('Blog', blogSchema, 'blogs');
-
+const Blog = mongoose.model<IBlog, BlogModelType>('Blog', blogSchema, 'blogs');
 export default Blog;

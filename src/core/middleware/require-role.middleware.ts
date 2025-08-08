@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import Role from '@modules/role/role.model';
-import { AppError } from '@common';
+import { AppError } from '@core';
 
 export const requireRole = (allowedRoles: string[]) => {
   return async (req: Request, _: Response, next: NextFunction) => {

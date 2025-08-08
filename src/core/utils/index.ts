@@ -9,3 +9,4 @@ export * from './build-common-query';
 export * from './pagination';
 export * from './send-paginated-response';
 export * from './remove-vietnamese-tones';
+export * from './i18n';

@@ -5,7 +5,7 @@ import {
   sendResponse,
   buildCommonQuery,
   AppError,
-} from '@common';
+} from '@core';
 
 export const getAll = async (
   req: Request,

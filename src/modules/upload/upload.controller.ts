@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { uploadImageToSupabase } from './upload.service';
-import { sendResponse, AppError } from '@common';
+import { sendResponse, AppError } from '@core';
 
 export const uploadImage = async (
   req: Request,

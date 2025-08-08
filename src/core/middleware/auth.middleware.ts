@@ -1,7 +1,7 @@
 // src/core/middleware/requireAuth.ts
 import { Request, Response, NextFunction } from 'express';
-import { verifyAccessToken } from '@common/jwt';
-import { AppError, isErrorWithName } from '@common';
+import { verifyAccessToken } from '@core/jwt';
+import { AppError, isErrorWithName } from '@core';
 import { UserStatus } from '@shared/enums';
 
 export const requireAuth = (req: Request, _: Response, next: NextFunction) => {

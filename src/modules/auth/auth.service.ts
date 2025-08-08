@@ -4,8 +4,8 @@ import {
   generateAccessToken,
   generateRefreshToken,
   verifyRefreshToken,
-} from '@common/jwt';
-import { AppError } from '@common';
+} from '@core/jwt';
+import { AppError } from '@core';
 import { LoginInput, RegisterInput } from './dtos';
 
 export const register = async (input: RegisterInput) => {

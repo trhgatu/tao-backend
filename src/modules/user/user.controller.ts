@@ -5,7 +5,7 @@ import {
   getUserId,
   buildCommonQuery,
   sendPaginatedResponse,
-} from '@common';
+} from '@core';
 
 export const getMe = async (
   req: Request,

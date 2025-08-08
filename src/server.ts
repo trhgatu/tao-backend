@@ -6,7 +6,7 @@ import app from './app';
 import { connectMongoDB } from '@config/database';
 import { redisClient } from '@config/redis';
 import { initSocketServer } from './socket';
-import log from '@common/logger';
+import log from '@core/logger';
 
 const port = process.env.PORT || 3000;
 const httpServer = createServer(app);

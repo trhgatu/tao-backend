@@ -1,6 +1,6 @@
 import Permission, { IPermission } from './permission.model';
 import { CreatePermissionInput, UpdatePermissionInput } from './dtos';
-import { paginate, PaginationParams, PaginationResult } from '@common';
+import { paginate, PaginationParams, PaginationResult } from '@core';
 import { getCache, setCache } from '@shared/services';
 
 export const getAllPermissions = async (

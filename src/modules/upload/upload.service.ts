@@ -1,4 +1,4 @@
-import { supabase } from '@common';
+import { supabase } from '@core';
 import { v4 as uuidv4 } from 'uuid';
 
 export const uploadImageToSupabase = async (

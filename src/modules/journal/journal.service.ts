@@ -1,7 +1,7 @@
-import { paginate } from '@common';
+import { paginate } from '@core';
 import { getCache, setCache, deleteKeysByPattern } from '@shared/services';
 import Journal, { IJournal } from './journal.model';
-import type { PaginationParams, PaginationResult } from '@common';
+import type { PaginationParams, PaginationResult } from '@core';
 import type { CreateJournalInput, UpdateJournalInput } from './dtos';
 
 export const getAllJournals = async (

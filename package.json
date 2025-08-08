@@ -75,7 +75,7 @@
     "@routes": "dist/routes",
     "@config": "dist/config",
     "@middlewares": "dist/core/middleware",
-    "@common": "dist/core/utils",
+    "@core": "dist/core/utils",
     "@shared": "dist/shared",
     "@socket": "dist/socket",
     "@usecases": "dist/usecases",

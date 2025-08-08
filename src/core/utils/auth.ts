@@ -1,5 +1,5 @@
 import { Request } from 'express';
-import { AppError } from '@common';
+import { AppError } from '@core';
 
 export const getUserId = (req: Request): string => {
   const userId = req.user?._id;
