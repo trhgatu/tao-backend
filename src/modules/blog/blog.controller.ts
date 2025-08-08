@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import { getBlogQueryDto } from './dtos/get-blog.dto';
 import * as blogService from './blog.service';
 import {
   sendPaginatedResponse,
@@ -15,7 +16,12 @@ export const getAll = async (
   try {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
-    const { filters, sort } = buildCommonQuery(req, ['name']);
+    const { filters, sort } = buildCommonQuery(req, [
+      'slug',
+      'status',
+      'tags',
+      'publishedAt',
+    ]);
     const result = await blogService.getAllBlogs(
       { page, limit },
       filters,
@@ -34,15 +40,29 @@ export const getAll = async (
   }
 };
 
+export const getBySlug = async (req, res, next) => {
+  try {
+    const { lang } = getBlogQueryDto.parse(req.query);
+    const blog = await blogService.getBlogBySlugLocalized(
+      req.params.slug,
+      lang
+    );
+    if (!blog) throw new AppError('Blog not found', 404);
+    sendResponse({ res, message: 'Blog found', data: blog });
+  } catch (err) {
+    next(err);
+  }
+};
+
 export const getById = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const role = await blogService.getBlogById(req.params.id);
-    if (!role) throw new AppError('Role not found', 404);
-    sendResponse({ res, message: 'Role found', data: role });
+    const blog = await blogService.getBlogById(req.params.id);
+    if (!blog) throw new AppError('Blog not found', 404);
+    sendResponse({ res, message: 'Blog found', data: blog });
   } catch (err) {
     next(err);
   }
@@ -54,8 +74,8 @@ export const create = async (
   next: NextFunction
 ) => {
   try {
-    const role = await blogService.createBlog(req.body);
-    sendResponse({ res, message: 'Role created', statusCode: 201, data: role });
+    const blog = await blogService.createBlog(req.body);
+    sendResponse({ res, message: 'Blog created', statusCode: 201, data: blog });
   } catch (err) {
     next(err);
   }
@@ -67,9 +87,9 @@ export const update = async (
   next: NextFunction
 ) => {
   try {
-    const role = await blogService.updateBlog(req.params.id, req.body);
-    if (!role) throw new AppError('Role not found', 404);
-    sendResponse({ res, message: 'Role updated', data: role });
+    const blog = await blogService.updateBlog(req.params.id, req.body);
+    if (!blog) throw new AppError('Blog not found', 404);
+    sendResponse({ res, message: 'Blog updated', data: blog });
   } catch (err) {
     next(err);
   }

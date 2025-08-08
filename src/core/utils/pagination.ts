@@ -1,7 +1,8 @@
-import { Model, PopulateOptions } from 'mongoose';
+// src/core/utils/pagination.ts
+import { Model, PopulateOptions, FilterQuery } from 'mongoose';
 
-type Query = Record<string, unknown>;
 type Sort = Record<string, 1 | -1>;
+type Select = string | Record<string, 0 | 1>;
 
 export interface PaginationParams {
   page: number;
@@ -18,47 +19,39 @@ export interface PaginationResult<T> {
 export const paginate = async <T>(
   model: Model<T>,
   { page = 1, limit = 10 }: PaginationParams,
-  query: Query = {},
+  query: FilterQuery<T> = {},
   sort: Sort = {},
-  populate?: string | string[] | PopulateOptions[],
-  select = ''
+  populate?: string | (string | PopulateOptions)[],
+  select?: Select
 ): Promise<PaginationResult<T>> => {
   const skip = (page - 1) * limit;
 
-  try {
-    let dbQuery = model
-      .find(query)
-      .select(select)
-      .sort(sort)
-      .skip(skip)
-      .limit(limit);
+  let dbQuery = model.find(query).sort(sort).skip(skip).limit(limit);
+  if (select) dbQuery = dbQuery.select(select);
 
-    if (populate) {
-      if (Array.isArray(populate)) {
-        populate.forEach((p) => {
-          if (typeof p === 'string') {
-            dbQuery = dbQuery.populate([p]);
-          } else {
-            dbQuery = dbQuery.populate(p);
-          }
-        });
-      } else {
-        dbQuery = dbQuery.populate(populate);
+  if (populate) {
+    if (Array.isArray(populate)) {
+      for (const p of populate) {
+        if (typeof p === 'string') {
+          dbQuery = dbQuery.populate(p);
+        } else {
+          dbQuery = dbQuery.populate(p);
+        }
       }
+    } else {
+      dbQuery = dbQuery.populate(populate);
     }
-
-    const [data, total] = await Promise.all([
-      dbQuery.lean<T[]>(),
-      model.countDocuments(query),
-    ]);
-
-    return {
-      data,
-      total,
-      currentPage: page,
-      totalPages: Math.ceil(total / limit),
-    };
-  } catch (error) {
-    throw new Error(`Pagination failed: ${(error as Error).message}`);
   }
+
+  const [data, total] = await Promise.all([
+    dbQuery.lean<T[]>(),
+    model.countDocuments(query),
+  ]);
+
+  return {
+    data,
+    total,
+    currentPage: page,
+    totalPages: Math.max(1, Math.ceil(total / limit)),
+  };
 };
