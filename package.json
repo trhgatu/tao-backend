@@ -71,14 +71,14 @@
     "typescript-eslint": "^8.34.1"
   },
   "_moduleAliases": {
-    "@modules": "dist/modules",
-    "@routes": "dist/routes",
-    "@config": "dist/config",
-    "@middlewares": "dist/core/middleware",
-    "@core": "dist/core/utils",
-    "@shared": "dist/shared",
-    "@socket": "dist/socket",
-    "@usecases": "dist/usecases",
-    "@types": "dist/core/types"
+    "@modules": "src/modules",
+    "@routes": "src/routes",
+    "@config": "src/config",
+    "@middlewares": "src/core/middleware",
+    "@core": "src/core/utils",
+    "@shared": "src/shared",
+    "@socket": "src/socket",
+    "@usecases": "src/usecases",
+    "@types": "src/core/types"
   }
 }
