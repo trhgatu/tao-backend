@@ -2,8 +2,7 @@
 import { Router } from 'express';
 import * as blogController from './blog.controller';
 import { requireAuth, createAuditLog, validate } from '@middlewares';
-import { createBlogSchema } from '@modules/blog/dtos/create-blog.dto';
-import { updateBlogSchema } from '@modules/blog/dtos/update-blog.dto';
+import { createBlogSchema, updateBlogSchema } from './dtos';
 import { LogAction } from '@shared/enums';
 
 const router = Router();
@@ -29,7 +28,7 @@ router.post(
 // LIST
 router.get('/', blogController.getAll);
 
-// GET BY SLUG (đặt trước /:id để không bị nuốt)
+// GET BY SLUG
 router.get('/slug/:slug', blogController.getBySlug);
 
 // GET BY ID

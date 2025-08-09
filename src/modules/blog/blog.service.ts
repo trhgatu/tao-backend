@@ -85,6 +85,7 @@ export const updateBlog = async (id: string, payload: UpdateBlogInput) => {
 
   mergeLocaleMap(doc.i18nTitle, payload.i18nTitle);
   mergeLocaleMap(doc.i18nContent, payload.i18nContent);
+
   if (payload.tags !== undefined) doc.tags = payload.tags;
   if (payload.coverImage !== undefined) doc.coverImage = payload.coverImage;
   if (payload.status !== undefined) doc.status = payload.status;
