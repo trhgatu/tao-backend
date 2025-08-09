@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import * as memoryService from './memory.service';
+import { getMemoryQueryDto } from './dtos';
 import {
   sendPaginatedResponse,
   sendResponse,
@@ -15,13 +16,19 @@ export const getAll = async (
   try {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
-    const { filters, sort } = buildCommonQuery(req, ['title']);
+    const { filters, sort } = buildCommonQuery(req, [
+      'slug',
+      'status',
+      'tags',
+      'date',
+      'mood',
+      'location',
+    ]);
     const result = await memoryService.getAllMemories(
       { page, limit },
       filters,
       sort
     );
-
     sendPaginatedResponse({
       res,
       message: 'All memories fetched',
@@ -30,6 +37,24 @@ export const getAll = async (
       currentPage: result.currentPage,
       totalPages: result.totalPages,
     });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getBySlug = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { lang } = getMemoryQueryDto.parse(req.query);
+    const memory = await memoryService.getMemoryBySlugLocalized(
+      req.params.slug,
+      lang
+    );
+    if (!memory) throw new AppError('Memory not found', 404);
+    sendResponse({ res, message: 'Memory found', data: memory });
   } catch (err) {
     next(err);
   }

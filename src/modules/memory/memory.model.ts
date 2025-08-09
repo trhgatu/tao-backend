@@ -1,31 +1,49 @@
-import mongoose, { Schema, Document } from 'mongoose';
+// src/modules/memory/memory.model.ts
+import mongoose, { Schema, Document, Model } from 'mongoose';
 import slugify from 'slugify';
 import { ContentStatusEnum, MemoryMoodEnum } from '@shared/enums';
-import { removeVietnameseTones } from '@core';
+import { removeVietnameseTones, LocaleCode, pickLocale } from '@core';
+
+export interface LocaleText {
+  text: string;
+  auto?: boolean;
+  updatedAt?: Date;
+  updatedBy?: mongoose.Types.ObjectId;
+}
+const LocaleTextSchema = new Schema<LocaleText>(
+  {
+    text: { type: String, required: true },
+    auto: { type: Boolean, default: false },
+    updatedAt: { type: Date },
+    updatedBy: { type: Schema.Types.ObjectId, ref: 'User' },
+  },
+  { _id: false }
+);
 
 export interface IMemory extends Document {
   _id: mongoose.Types.ObjectId;
-  title: string;
+  i18nTitle: Map<LocaleCode, LocaleText>;
+  i18nDescription: Map<LocaleCode, LocaleText>;
   slug: string;
-  description?: string;
   imageUrl?: string;
   location?: string;
   mood: MemoryMoodEnum;
   date?: Date;
   tags?: string[];
-  translations: Map<string, string>;
-  autoTranslated: boolean;
   status: ContentStatusEnum;
   createdAt: Date;
   updatedAt: Date;
-  deletedAt?: Date;
   isDeleted?: boolean;
+  deletedAt?: Date;
+  publishedAt?: Date;
+  getLocalized(lang?: LocaleCode): { title: string; description: string };
 }
+type MemoryModelType = Model<IMemory>;
 
-const memorySchema: Schema<IMemory> = new Schema(
+const memorySchema = new Schema<IMemory, MemoryModelType>(
   {
-    title: { type: String, required: true, trim: true },
-    description: { type: String },
+    i18nTitle: { type: Map, of: LocaleTextSchema, default: {} },
+    i18nDescription: { type: Map, of: LocaleTextSchema, default: {} },
     slug: { type: String, unique: true },
     imageUrl: { type: String },
     location: { type: String },
@@ -36,41 +54,52 @@ const memorySchema: Schema<IMemory> = new Schema(
     },
     date: { type: Date },
     tags: [{ type: String }],
-    translations: {
-      type: Map,
-      of: String,
-      default: {},
-    },
-    autoTranslated: { type: Boolean, default: false },
     status: {
       type: String,
       enum: Object.values(ContentStatusEnum),
-      default: ContentStatusEnum.PRIVATE,
+      default: ContentStatusEnum.DRAFT,
     },
+    publishedAt: { type: Date },
     isDeleted: { type: Boolean, default: false },
     deletedAt: { type: Date },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
-memorySchema.pre('validate', async function (next) {
-  if (!this.isModified('title') && !this.isNew) return next();
+memorySchema.index({ isDeleted: 1, status: 1, date: -1 });
+memorySchema.index({ slug: 1 }, { unique: true });
 
-  const normalizedTitle = removeVietnameseTones(this.title);
-  const baseSlug = slugify(normalizedTitle, { lower: true, strict: true });
-  let slug = baseSlug;
-  let count = 1;
+memorySchema.methods.getLocalized = function (lang: LocaleCode = 'vi') {
+  return {
+    title: pickLocale(this.i18nTitle, lang),
+    description: pickLocale(this.i18nDescription, lang),
+  };
+};
 
-  while (await Memory.exists({ slug })) {
-    slug = `${baseSlug}-${count++}`;
-  }
+memorySchema.pre<IMemory>('validate', async function (next) {
+  if (!this.isNew && !this.isModified('i18nTitle')) return next();
+
+  const baseTitle =
+    this.i18nTitle.get('vi')?.text ||
+    this.i18nTitle.get('en')?.text ||
+    'memory';
+
+  const normalizedTitle = removeVietnameseTones(baseTitle);
+  const baseSlug =
+    slugify(normalizedTitle || 'memory', { lower: true, strict: true }) ||
+    'memory';
+
+  let slug = baseSlug,
+    count = 1;
+  const MemoryModel = this.constructor as MemoryModelType;
+  while (await MemoryModel.exists({ slug })) slug = `${baseSlug}-${count++}`;
 
   this.slug = slug;
   next();
 });
 
-const Memory = mongoose.model<IMemory>('Memory', memorySchema, 'memories');
-
-export default Memory;
+export default mongoose.model<IMemory, MemoryModelType>(
+  'Memory',
+  memorySchema,
+  'memories'
+);

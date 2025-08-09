@@ -1,5 +1,6 @@
 import { z } from 'zod';
-import { localeTextSchema } from './locale-text.dto';
+import { localeTextSchema } from '@shared/dtos';
+import { ContentStatusEnum } from '@shared/enums';
 
 const i18nLocaleKeys = z
   .object({
@@ -7,8 +8,6 @@ const i18nLocaleKeys = z
     en: localeTextSchema.optional(),
   })
   .strict();
-
-const statusEnum = z.enum(['draft', 'published', 'archived']);
 
 export const createBlogSchema = z
   .object({
@@ -18,7 +17,10 @@ export const createBlogSchema = z
     // meta
     tags: z.array(z.string()).optional(),
     coverImage: z.string().url().optional(),
-    status: statusEnum.optional().default('draft'),
+    status: z
+      .nativeEnum(ContentStatusEnum)
+      .optional()
+      .default(ContentStatusEnum.DRAFT),
     publishedAt: z.coerce.date().optional(),
   })
   .strict()
