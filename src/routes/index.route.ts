@@ -18,8 +18,12 @@ import adminBlogRoutes from '@modules/blog/routes/blog.admin.route';
 
 import memoryRoutes from '@modules/memory/memory.route';
 import journalRoutes from '@modules/journal/journal.route';
+
 import publicQuoteRoutes from '@modules/quote/routes/quote.public.route';
 import adminQuoteRoutes from '@modules/quote/routes/quote.admin.route';
+
+import publicProjectRoutes from '@modules/project/routes/project.public.route';
+import adminProjectRoutes from '@modules/project/routes/project.admin.route';
 
 //upload route
 import uploadRoutes from '@modules/upload/upload.route';
@@ -39,5 +43,8 @@ router.use('/journals', journalRoutes);
 
 router.use('/quotes', publicQuoteRoutes);
 router.use('/admin/quotes', adminQuoteRoutes);
+
+router.use('/projects', publicProjectRoutes);
+router.use('/admin/projects', adminProjectRoutes);
 
 export default router;
