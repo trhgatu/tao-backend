@@ -2,7 +2,7 @@
 import mongoose, { Schema, Document, Model } from 'mongoose';
 import slugify from 'slugify';
 import { ContentStatusEnum, MemoryMoodEnum } from '@shared/enums';
-import { removeVietnameseTones, LocaleCode, pickLocale } from '@core';
+import { removeVietnameseTones, LocaleCode, pickLocaleText } from '@core';
 
 export interface LocaleText {
   text: string;
@@ -71,8 +71,8 @@ memorySchema.index({ slug: 1 }, { unique: true });
 
 memorySchema.methods.getLocalized = function (lang: LocaleCode = 'vi') {
   return {
-    title: pickLocale(this.i18nTitle, lang),
-    description: pickLocale(this.i18nDescription, lang),
+    title: pickLocaleText(this.i18nTitle, lang),
+    description: pickLocaleText(this.i18nDescription, lang),
   };
 };
 
