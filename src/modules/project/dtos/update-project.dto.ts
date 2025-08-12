@@ -3,21 +3,17 @@ import { z } from 'zod';
 import { ContentStatusEnum, ProjectStatusEnum } from '@shared/enums';
 import { localeTextSchema } from '@shared/dtos/locale-text.dto';
 
-const i18nLocaleKeys = z
+const i18nLocaleKeysPartial = z
   .object({
-    vi: localeTextSchema,
-    en: localeTextSchema.optional(),
+    vi: localeTextSchema.partial().optional(),
+    en: localeTextSchema.partial().optional(),
   })
   .strict();
 
-export const createProjectSchema = z
+export const updateProjectSchema = z
   .object({
-    slug: z
-      .string()
-      .min(1)
-      .regex(/^[a-z0-9-]+$/),
-    i18nName: i18nLocaleKeys,
-    i18nDescription: i18nLocaleKeys.optional(),
+    i18nName: i18nLocaleKeysPartial.optional(),
+    i18nDescription: i18nLocaleKeysPartial.optional(),
     image: z.string().url().optional(),
     tech: z.array(z.string()).optional(),
     category: z.string().optional(),
@@ -41,4 +37,4 @@ export const createProjectSchema = z
     path: ['publishedAt'],
   });
 
-export type CreateProjectInput = z.infer<typeof createProjectSchema>;
+export type UpdateProjectInput = z.infer<typeof updateProjectSchema>;

@@ -3,6 +3,7 @@ export enum LogAction {
   UPDATE = 'update',
   DELETE = 'delete',
   READ = 'read',
+  RESTORE = 'restore',
   LOGIN = 'login',
   LOGOUT = 'logout',
   RESET_PASSWORD = 'reset-password',
