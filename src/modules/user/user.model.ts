@@ -27,12 +27,19 @@ export interface IUser extends Document {
   isDeleted: boolean;
   createdAt: Date;
   updatedAt: Date;
+  deletedAt?: Date;
 }
 
-const userSchema: Schema<IUser> = new Schema(
+const userSchema = new Schema<IUser>(
   {
-    email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
+    },
+    password: { type: String, required: true, select: false },
 
     fullName: { type: String, default: '' },
     username: { type: String, default: '' },
@@ -51,13 +58,50 @@ const userSchema: Schema<IUser> = new Schema(
       default: 'other',
     },
     birthDate: { type: Date },
-    roleId: { type: mongoose.Schema.Types.ObjectId, ref: 'Role' },
+
+    roleId: { type: mongoose.Schema.Types.ObjectId, ref: 'Role', index: true },
+
     emailVerified: { type: Boolean, default: false },
     lastLoginAt: { type: Date },
-    isDeleted: { type: Boolean, default: false },
+
+    isDeleted: { type: Boolean, default: false, index: true },
+    deletedAt: { type: Date },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    toJSON: {
+      virtuals: true,
+      transform: (_doc, ret) => {
+        delete ret.password;
+        delete ret.__v;
+        return ret;
+      },
+    },
+    toObject: { virtuals: true },
+  }
 );
+
+userSchema.index(
+  { email: 1 },
+  { unique: true, partialFilterExpression: { isDeleted: false } }
+);
+
+userSchema.virtual('role', {
+  ref: 'Role',
+  localField: 'roleId',
+  foreignField: '_id',
+  justOne: true,
+});
+
+userSchema.pre('save', function (next) {
+  if (this.isModified('email') && this.email) {
+    this.email = this.email.toLowerCase().trim();
+  }
+  if (this.isModified('isDeleted') && this.isDeleted && !this.deletedAt) {
+    this.deletedAt = new Date();
+  }
+  next();
+});
 
 const User = mongoose.model<IUser>('User', userSchema, 'users');
 export default User;

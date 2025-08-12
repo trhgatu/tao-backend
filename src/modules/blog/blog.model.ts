@@ -2,7 +2,7 @@
 import mongoose, { Schema, Document, Model } from 'mongoose';
 import slugify from 'slugify';
 import { ContentStatusEnum } from '@shared/enums';
-import { removeVietnameseTones, LocaleCode, pickLocale } from '@core';
+import { removeVietnameseTones, LocaleCode, pickLocaleText } from '@core';
 
 export interface LocaleText {
   text: string;
@@ -70,8 +70,8 @@ const blogSchema = new Schema<IBlog, BlogModelType>(
 // Method: lấy title/content theo lang, fallback 'vi'
 blogSchema.methods.getLocalized = function (lang: LocaleCode = 'vi') {
   return {
-    title: pickLocale(this.i18nTitle, lang),
-    content: pickLocale(this.i18nContent, lang),
+    title: pickLocaleText(this.i18nTitle, lang),
+    content: pickLocaleText(this.i18nContent, lang),
   };
 };
 

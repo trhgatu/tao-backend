@@ -1,8 +1,8 @@
 // src/modules/blog/blog.route.ts
 import { Router } from 'express';
-import * as blogController from './blog.controller';
+import * as blogController from '../blog.controller';
 import { requireAuth, createAuditLog, validate } from '@middlewares';
-import { createBlogSchema, updateBlogSchema } from './dtos';
+import { createBlogSchema, updateBlogSchema } from '../dtos';
 import { LogAction } from '@shared/enums';
 
 const router = Router();
@@ -26,7 +26,7 @@ router.post(
 );
 
 // LIST
-router.get('/', blogController.getAll);
+router.get('/', requireAuth, blogController.listAdmin);
 
 // GET BY SLUG
 router.get('/slug/:slug', blogController.getBySlug);

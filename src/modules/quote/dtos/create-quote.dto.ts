@@ -1,5 +1,6 @@
+// src/modules/quote/dtos/create-quote.dto.ts
 import { z } from 'zod';
-import { localeTextSchema } from '@shared/dtos';
+import { localeTextSchema } from '@shared/dtos/locale-text.dto';
 import { ContentStatusEnum } from '@shared/enums';
 
 const i18nLocaleKeys = z
@@ -9,14 +10,11 @@ const i18nLocaleKeys = z
   })
   .strict();
 
-export const createBlogSchema = z
+export const createQuoteSchema = z
   .object({
-    i18nTitle: i18nLocaleKeys,
-    i18nContent: i18nLocaleKeys,
-
-    // meta
+    i18nText: i18nLocaleKeys,
+    i18nAuthor: i18nLocaleKeys.optional(),
     tags: z.array(z.string()).optional(),
-    coverImage: z.string().url().optional(),
     status: z
       .nativeEnum(ContentStatusEnum)
       .optional()
@@ -25,8 +23,8 @@ export const createBlogSchema = z
   })
   .strict()
   .refine((d) => d.status !== ContentStatusEnum.PUBLISHED || !!d.publishedAt, {
-    message: 'publishedAt is required when status is published',
+    message: 'publishedAt is required when status is PUBLISHED',
     path: ['publishedAt'],
   });
 
-export type CreateBlogInput = z.infer<typeof createBlogSchema>;
+export type CreateQuoteInput = z.infer<typeof createQuoteSchema>;

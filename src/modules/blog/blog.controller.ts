@@ -1,33 +1,99 @@
+// src/modules/blog/blog.controller.ts
 import { Request, Response, NextFunction } from 'express';
-import { getBlogQueryDto } from './dtos/get-blog.dto';
+import { getBlogQueryDto, BlogListItemDto } from './dtos';
+import type { IBlog } from '@modules/blog/blog.model';
 import * as blogService from './blog.service';
 import {
   sendPaginatedResponse,
   sendResponse,
   buildCommonQuery,
   AppError,
+  pickLocaleEntry,
 } from '@core';
+import type { LocaleText } from '@shared/i18n';
 
-export const getAll = async (
+export const listPublic = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const page = parseInt(req.query.page as string) || 1;
-    const limit = parseInt(req.query.limit as string) || 10;
+    const page = Number(req.query.page ?? 1);
+    const limit = Number(req.query.limit ?? 10);
+    const { lang } = getBlogQueryDto.parse(req.query);
+
+    const { filters, sort } = buildCommonQuery(req, [
+      'slug',
+      'tags',
+      'publishedAt',
+    ]);
+    const effectiveFilters: Record<string, unknown> = {
+      ...filters,
+      isDeleted: false,
+      status: 'published',
+    };
+
+    const result = await blogService.getAllBlogs(
+      { page, limit },
+      effectiveFilters,
+      sort
+    );
+
+    const data: BlogListItemDto[] = result.data.map((doc: IBlog) => {
+      const t = pickLocaleEntry<LocaleText>(doc.i18nTitle, lang);
+      const c = pickLocaleEntry<LocaleText>(doc.i18nContent, lang);
+      return {
+        _id: String(doc._id),
+        slug: doc.slug,
+        title: t?.text ?? '',
+        content: c?.text ?? '',
+        tags: doc.tags ?? [],
+        coverImage: doc.coverImage,
+        publishedAt: doc.publishedAt,
+        status: doc.status,
+      };
+    });
+
+    sendPaginatedResponse<BlogListItemDto>({
+      res,
+      message: 'All blogs fetched',
+      data,
+      total: result.total,
+      currentPage: result.currentPage,
+      totalPages: result.totalPages,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const listAdmin = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const page = Number(req.query.page ?? 1);
+    const limit = Number(req.query.limit ?? 10);
+
     const { filters, sort } = buildCommonQuery(req, [
       'slug',
       'status',
       'tags',
       'publishedAt',
     ]);
+    const effectiveFilters: Record<string, unknown> = {
+      ...filters,
+      isDeleted: false,
+    };
+
     const result = await blogService.getAllBlogs(
       { page, limit },
-      filters,
+      effectiveFilters,
       sort
     );
-    sendPaginatedResponse({
+
+    sendPaginatedResponse<IBlog>({
       res,
       message: 'All blogs fetched',
       data: result.data,
@@ -40,7 +106,11 @@ export const getAll = async (
   }
 };
 
-export const getBySlug = async (req, res, next) => {
+export const getBySlug = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { lang } = getBlogQueryDto.parse(req.query);
     const blog = await blogService.getBlogBySlugLocalized(
@@ -60,7 +130,8 @@ export const getById = async (
   next: NextFunction
 ) => {
   try {
-    const blog = await blogService.getBlogById(req.params.id);
+    const { lang } = getBlogQueryDto.parse(req.query);
+    const blog = await blogService.getBlogById(req.params.id, lang);
     if (!blog) throw new AppError('Blog not found', 404);
     sendResponse({ res, message: 'Blog found', data: blog });
   } catch (err) {

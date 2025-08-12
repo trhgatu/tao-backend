@@ -27,15 +27,43 @@ export const getAllBlogs = async (
     finalFilters,
     sort,
     undefined,
-    { i18nTitle: 1, slug: 1, tags: 1, coverImage: 1, publishedAt: 1, status: 1 }
+    {
+      i18nTitle: 1,
+      i18nContent: 1,
+      slug: 1,
+      tags: 1,
+      coverImage: 1,
+      publishedAt: 1,
+      status: 1,
+    }
   );
 
-  await setCache(cacheKey, result, 60); // TTL 60s
+  await setCache(cacheKey, result, 60);
   return result;
 };
 
-export const getBlogById = (id: string) => {
-  return Blog.findById(id).where({ isDeleted: false });
+export const getBlogById = async (id: string, lang: LocaleCode) => {
+  const cacheKey = `blogs:id:${id}:lang:${lang}`;
+  const cached = await getCache(cacheKey);
+  if (cached) return cached;
+
+  const doc = await Blog.findById(id).where({ isDeleted: false });
+  if (!doc) return null;
+
+  const { title, content } = doc.getLocalized(lang);
+  const payload = {
+    _id: doc._id,
+    slug: doc.slug,
+    title,
+    content,
+    tags: doc.tags,
+    coverImage: doc.coverImage,
+    publishedAt: doc.publishedAt,
+    status: doc.status,
+  };
+
+  await setCache(cacheKey, payload, 60);
+  return payload;
 };
 
 export const getBlogBySlugLocalized = async (
@@ -71,7 +99,7 @@ export const createBlog = async (payload: CreateBlogInput) => {
     i18nContent: toLocaleMap(payload.i18nContent),
     tags: payload.tags ?? [],
     coverImage: payload.coverImage,
-    status: payload.status ?? 'draft',
+    status: payload.status,
     publishedAt: payload.publishedAt,
   });
 
@@ -83,8 +111,11 @@ export const updateBlog = async (id: string, payload: UpdateBlogInput) => {
   const doc = await Blog.findById(id).where({ isDeleted: false });
   if (!doc) return null;
 
-  mergeLocaleMap(doc.i18nTitle, payload.i18nTitle);
-  mergeLocaleMap(doc.i18nContent, payload.i18nContent);
+  const tChanged = mergeLocaleMap(doc.i18nTitle, payload.i18nTitle);
+  const cChanged = mergeLocaleMap(doc.i18nContent, payload.i18nContent);
+
+  if (tChanged) doc.markModified('i18nTitle');
+  if (cChanged) doc.markModified('i18nContent');
 
   if (payload.tags !== undefined) doc.tags = payload.tags;
   if (payload.coverImage !== undefined) doc.coverImage = payload.coverImage;

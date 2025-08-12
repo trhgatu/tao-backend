@@ -1,9 +1,9 @@
-import { UserPayload } from '@modules/user/user.payload';
+import { AccessTokenPayload } from '@core/jwt';
 
 declare global {
   namespace Express {
     interface Request {
-      user?: UserPayload;
+      user?: AccessTokenPayload;
     }
   }
 }

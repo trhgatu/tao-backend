@@ -84,7 +84,7 @@ export const createMemory = async (payload: CreateMemoryInput) => {
     mood: payload.mood,
     date: payload.date,
     tags: payload.tags ?? [],
-    status: payload.status ?? 'draft',
+    status: payload.status,
     publishedAt: payload.publishedAt,
   });
 

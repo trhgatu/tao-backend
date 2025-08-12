@@ -12,10 +12,15 @@ import roleRoutes from '@modules/role/role.route';
 
 //permission route
 import permissionRoutes from '@modules/permission/permission.route';
-import blogRoutes from '@modules/blog/blog.route';
+
+import publicBlogRoutes from '@modules/blog/routes/blog.public.route';
+import adminBlogRoutes from '@modules/blog/routes/blog.admin.route';
+
 import memoryRoutes from '@modules/memory/memory.route';
 import journalRoutes from '@modules/journal/journal.route';
-import quoteRoutes from '@modules/quote/quote.route';
+import publicQuoteRoutes from '@modules/quote/routes/quote.public.route';
+import adminQuoteRoutes from '@modules/quote/routes/quote.admin.route';
+
 //upload route
 import uploadRoutes from '@modules/upload/upload.route';
 const router = Router();
@@ -27,9 +32,12 @@ router.use('/permissions', permissionRoutes);
 router.use('/uploads', uploadRoutes);
 // blog route
 
-router.use('/blogs', blogRoutes);
+router.use('/blogs', publicBlogRoutes);
+router.use('/admin/blogs', adminBlogRoutes);
 router.use('/memories', memoryRoutes);
 router.use('/journals', journalRoutes);
-router.use('/quotes', quoteRoutes);
+
+router.use('/quotes', publicQuoteRoutes);
+router.use('/admin/quotes', adminQuoteRoutes);
 
 export default router;
