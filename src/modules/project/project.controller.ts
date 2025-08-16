@@ -21,7 +21,11 @@ export const listPublic = async (
     const limit = Number(req.query.limit ?? 10);
     const { lang } = getProjectQueryDto.parse(req.query);
 
-    const { filters, sort } = buildCommonQuery(req, ['year', 'createdAt']);
+    const { filters, sort } = buildCommonQuery(req, [
+      'type',
+      'year',
+      'createdAt',
+    ]);
     const effectiveFilters: Record<string, unknown> = {
       ...filters,
       isDeleted: false,
@@ -53,6 +57,7 @@ export const listPublic = async (
         featured: doc.featured,
         year: doc.year,
         status: doc.status,
+        type: doc.type,
         publishedAt: doc.publishedAt,
       };
     });
@@ -79,6 +84,7 @@ export const listAdmin = async (
     const page = Number(req.query.page ?? 1);
     const limit = Number(req.query.limit ?? 10);
     const { filters, sort } = buildCommonQuery(req, [
+      'type',
       'status',
       'category',
       'projectStatus',

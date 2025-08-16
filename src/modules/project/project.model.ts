@@ -1,5 +1,9 @@
 import mongoose, { Schema, Document, model, Types } from 'mongoose';
-import { ContentStatusEnum, ProjectStatusEnum } from '@shared/enums';
+import {
+  ContentStatusEnum,
+  ProjectStatusEnum,
+  ProjectTypeEnum,
+} from '@shared/enums';
 import { LocaleCode, pickLocaleText } from '@core';
 
 export interface LocaleText {
@@ -28,6 +32,7 @@ export interface IProject extends Document {
   tech?: string[];
   category?: string;
   projectStatus?: ProjectStatusEnum;
+  type?: ProjectTypeEnum;
   link?: string;
   repo?: string;
   featured?: boolean;
@@ -65,6 +70,11 @@ const projectSchema = new Schema<IProject>(
       type: String,
       enum: Object.values(ProjectStatusEnum),
       default: ProjectStatusEnum.IN_PROGRESS,
+    },
+    type: {
+      type: String,
+      enum: Object.values(ProjectTypeEnum),
+      default: ProjectTypeEnum.PROJECT,
     },
     publishedAt: { type: Date },
     isDeleted: { type: Boolean, default: false },

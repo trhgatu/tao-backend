@@ -1,6 +1,10 @@
 // src/modules/project/dtos/create-project.dto.ts
 import { z } from 'zod';
-import { ContentStatusEnum, ProjectStatusEnum } from '@shared/enums';
+import {
+  ContentStatusEnum,
+  ProjectStatusEnum,
+  ProjectTypeEnum,
+} from '@shared/enums';
 import { localeTextSchema } from '@shared/dtos/locale-text.dto';
 
 const i18nLocaleKeys = z
@@ -25,6 +29,10 @@ export const createProjectSchema = z
       .nativeEnum(ProjectStatusEnum)
       .optional()
       .default(ProjectStatusEnum.IN_PROGRESS),
+    type: z
+      .nativeEnum(ProjectTypeEnum)
+      .optional()
+      .default(ProjectTypeEnum.PROJECT),
     link: z.string().url().optional(),
     repo: z.string().url().optional(),
     featured: z.boolean().default(false),
