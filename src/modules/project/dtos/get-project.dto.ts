@@ -1,3 +1,4 @@
+import { ProjectTypeEnum } from '@shared/enums';
 import { z } from 'zod';
 
 export const getProjectQueryDto = z
@@ -6,6 +7,7 @@ export const getProjectQueryDto = z
     featured: z.coerce.boolean().optional(),
     category: z.string().optional(),
     status: z.enum(['In Progress', 'Completed']).optional(),
+    type: z.nativeEnum(ProjectTypeEnum).optional(),
     year: z.coerce.number().int().optional(),
   })
   .strict();

@@ -7,6 +7,7 @@ export interface ProjectListItemDto {
   tech: string[];
   category?: string;
   status: string;
+  type?: string;
   link?: string;
   repo?: string;
   featured?: boolean;

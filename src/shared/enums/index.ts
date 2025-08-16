@@ -4,3 +4,4 @@ export * from './user-status.enum';
 export * from './content-status.enum';
 export * from './memory-mood.enum';
 export * from './project-status.enum';
+export * from './project-type-enum';

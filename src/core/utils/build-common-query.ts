@@ -24,6 +24,11 @@ export const buildCommonQuery = (
     filters.status = status;
   }
 
+  const type = req.query.type;
+  if (typeof type === 'string') {
+    filters.type = type;
+  }
+
   const keyword = (req.query.search as string) || '';
   if (keyword && searchableFields.length) {
     filters.$or = searchableFields.map((field) => ({
