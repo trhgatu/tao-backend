@@ -1,9 +1,9 @@
 import Project, { IProject } from './project.model';
 import { getCache, setCache, deleteKeysByPattern } from '@shared/services';
-import { paginate } from '@core';
+import { paginate, toLocaleMap } from '@core';
 import type { CreateProjectInput, UpdateProjectInput } from './dtos';
 import type { PaginationParams, PaginationResult, LocaleCode } from '@core';
-import { mergeLocaleMap } from '@core';
+import { mergeLocaleMap, generateSlug } from '@core';
 import { ContentStatusEnum } from '@shared/enums';
 
 // Get all projects with caching
@@ -119,7 +119,18 @@ export const getProjectBySlugLocalized = async (
 
 // Create project
 export const createProject = async (payload: CreateProjectInput) => {
-  const project = await Project.create(payload);
+  let slug = payload.slug;
+
+  if (!slug) {
+    const baseName =
+      payload.i18nName?.vi.text ?? payload.i18nName?.en?.text ?? 'project';
+    slug = await generateSlug(baseName, Project);
+  }
+  const project = await Project.create({
+    ...payload,
+    slug,
+    i18nName: toLocaleMap(payload.i18nName),
+  });
   await deleteKeysByPattern('projects:list:*');
   return project;
 };

@@ -19,7 +19,8 @@ export const createProjectSchema = z
     slug: z
       .string()
       .min(1)
-      .regex(/^[a-z0-9-]+$/),
+      .regex(/^[a-z0-9-]+$/)
+      .optional(),
     i18nName: i18nLocaleKeys,
     i18nDescription: i18nLocaleKeys.optional(),
     image: z.string().url().optional(),
