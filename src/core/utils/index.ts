@@ -12,3 +12,4 @@ export * from './remove-vietnamese-tones';
 export * from './i18n';
 export * from './i18n-merge';
 export * from './locale-map';
+export * from './generate-slug';
