@@ -13,3 +13,4 @@ export * from './i18n';
 export * from './i18n-merge';
 export * from './locale-map';
 export * from './generate-slug';
+export * from './parse-boolean';

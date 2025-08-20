@@ -19,6 +19,7 @@ export const createMemorySchema = z
     mood: z.nativeEnum(MemoryMoodEnum),
     date: z.coerce.date().optional(),
     tags: z.array(z.string()).optional(),
+    featured: z.coerce.boolean().optional(),
     status: z
       .nativeEnum(ContentStatusEnum)
       .optional()

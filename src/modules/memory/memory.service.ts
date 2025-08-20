@@ -20,25 +20,9 @@ export const getAllMemories = async (
   const cached = await getCache<PaginationResult<IMemory>>(cacheKey);
   if (cached) return cached;
 
-  const result = await paginate(
-    Memory,
-    { page, limit },
-    finalFilters,
-    sort,
-    undefined,
-    {
-      i18nTitle: 1,
-      slug: 1,
-      imageUrl: 1,
-      mood: 1,
-      date: 1,
-      status: 1,
-      location: 1,
-      tags: 1,
-    }
-  );
+  const result = await paginate(Memory, { page, limit }, finalFilters, sort);
 
-  await setCache(cacheKey, result, 60); // TTL 60s (giống Blog)
+  await setCache(cacheKey, result, 60);
   return result;
 };
 
@@ -77,15 +61,9 @@ export const getMemoryBySlugLocalized = async (
 
 export const createMemory = async (payload: CreateMemoryInput) => {
   const memory = await Memory.create({
+    ...payload,
     i18nTitle: toLocaleMap(payload.i18nTitle),
     i18nDescription: toLocaleMap(payload.i18nDescription),
-    imageUrl: payload.imageUrl,
-    location: payload.location,
-    mood: payload.mood,
-    date: payload.date,
-    tags: payload.tags ?? [],
-    status: payload.status,
-    publishedAt: payload.publishedAt,
   });
 
   await deleteKeysByPattern('memories:list:*');
