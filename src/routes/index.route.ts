@@ -16,7 +16,9 @@ import permissionRoutes from '@modules/permission/permission.route';
 import publicBlogRoutes from '@modules/blog/routes/blog.public.route';
 import adminBlogRoutes from '@modules/blog/routes/blog.admin.route';
 
-import memoryRoutes from '@modules/memory/memory.route';
+import publicMemoryRoutes from '@modules/memory/routes/memory.public.route';
+import adminMemoryRoutes from '@modules/memory/routes/memory.admin.route';
+
 import journalRoutes from '@modules/journal/journal.route';
 
 import publicQuoteRoutes from '@modules/quote/routes/quote.public.route';
@@ -38,7 +40,10 @@ router.use('/uploads', uploadRoutes);
 
 router.use('/blogs', publicBlogRoutes);
 router.use('/admin/blogs', adminBlogRoutes);
-router.use('/memories', memoryRoutes);
+
+router.use('/memories', publicMemoryRoutes);
+router.use('/admin/memories', adminMemoryRoutes);
+
 router.use('/journals', journalRoutes);
 
 router.use('/quotes', publicQuoteRoutes);
