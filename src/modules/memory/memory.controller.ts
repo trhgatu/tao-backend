@@ -1,12 +1,71 @@
 import { Request, Response, NextFunction } from 'express';
 import * as memoryService from './memory.service';
-import { getMemoryQueryDto } from './dtos';
+import { getMemoryQueryDto, MemoryListItemDto } from './dtos';
 import {
   sendPaginatedResponse,
   sendResponse,
   buildCommonQuery,
   AppError,
+  pickLocaleEntry,
 } from '@core';
+import { IMemory } from '@modules/memory/memory.model';
+import { LocaleText } from '@shared/i18n';
+
+export const listPublic = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const page = Number(req.query.page ?? 1);
+    const limit = Number(req.query.limit ?? 10);
+    const { lang } = getMemoryQueryDto.parse(req.query);
+
+    const { filters, sort } = buildCommonQuery(req, ['mood', 'featured']);
+    const effectiveFilters: Record<string, unknown> = {
+      ...filters,
+      isDeleted: false,
+      status: 'published',
+    };
+
+    const result = await memoryService.getAllMemories(
+      { page, limit },
+      effectiveFilters,
+      sort
+    );
+    const data: MemoryListItemDto[] = result.data.map((doc: IMemory) => {
+      const title = pickLocaleEntry<LocaleText>(doc.i18nTitle, lang);
+      const description = pickLocaleEntry<LocaleText>(
+        doc.i18nDescription,
+        lang
+      );
+      return {
+        _id: String(doc._id),
+        slug: doc.slug,
+        title: title?.text ?? '',
+        description: description?.text ?? '',
+        tags: doc.tags ?? [],
+        imageUrl: doc.imageUrl,
+        location: doc.location,
+        featured: doc.featured,
+        date: doc.date,
+        status: doc.status,
+        mood: doc.mood,
+      };
+    });
+
+    sendPaginatedResponse<MemoryListItemDto>({
+      res,
+      message: 'Memories fetched successfully',
+      data,
+      total: result.total,
+      currentPage: result.currentPage,
+      totalPages: result.totalPages,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
 
 export const getAll = async (
   req: Request,

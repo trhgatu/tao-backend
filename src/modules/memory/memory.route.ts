@@ -8,7 +8,8 @@ import { LogAction } from '@shared/enums';
 const router = Router();
 
 // LIST
-router.get('/', requireAuth, memoryController.getAll);
+
+router.get('/', memoryController.listPublic);
 
 // GET BY SLUG
 router.get('/slug/:slug', memoryController.getBySlug);

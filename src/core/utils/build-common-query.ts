@@ -1,4 +1,5 @@
 import { Request } from 'express';
+import { parseBoolean } from '@core';
 
 export interface CommonQuery {
   filters: Record<string, unknown>;
@@ -22,6 +23,11 @@ export const buildCommonQuery = (
   const status = req.query.status;
   if (typeof status === 'string') {
     filters.status = status;
+  }
+
+  const featured = parseBoolean(req.query.featured);
+  if (featured !== undefined) {
+    filters.featured = featured;
   }
 
   const type = req.query.type;
