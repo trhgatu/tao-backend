@@ -24,7 +24,12 @@ export const createProjectSchema = z
     i18nName: i18nLocaleKeys,
     i18nDescription: i18nLocaleKeys.optional(),
     image: z.string().url().optional(),
-    tech: z.array(z.string()).optional(),
+    tech: z.array(
+      z.object({
+        name: z.string(),
+        icon: z.string(),
+      })
+    ),
     category: z.string().optional(),
     projectStatus: z
       .nativeEnum(ProjectStatusEnum)

@@ -157,7 +157,6 @@ export const updateProject = async (
 
   /* if (payload.slug !== undefined) project.slug = payload.slug; */
   if (payload.image !== undefined) project.image = payload.image;
-  if (payload.tech !== undefined) project.tech = payload.tech;
   if (payload.category !== undefined) project.category = payload.category;
   if (payload.projectStatus !== undefined)
     project.projectStatus = payload.projectStatus;
