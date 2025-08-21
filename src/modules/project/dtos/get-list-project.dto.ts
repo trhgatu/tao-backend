@@ -1,3 +1,5 @@
+import { ContentStatusEnum } from '@shared/enums';
+
 export interface ProjectListItemDto {
   _id: string;
   name: string;
@@ -6,7 +8,8 @@ export interface ProjectListItemDto {
   image?: string;
   tech: string[];
   category?: string;
-  status: string;
+  status: ContentStatusEnum;
+  projectStatus?: string;
   type?: string;
   link?: string;
   repo?: string;

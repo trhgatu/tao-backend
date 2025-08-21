@@ -1,19 +1,15 @@
 // src/modules/memory/memory.routes.ts
 import { Router } from 'express';
-import * as memoryController from './memory.controller';
+import * as memoryController from '../memory.controller';
 import { createAuditLog, requireAuth, validate } from '@middlewares';
-import { createMemorySchema, updateMemorySchema } from './dtos';
+import { createMemorySchema, updateMemorySchema } from '../dtos';
 import { LogAction } from '@shared/enums';
 
 const router = Router();
 
-// LIST
-
-router.get('/', memoryController.listPublic);
-
 // GET BY SLUG
-router.get('/slug/:slug', memoryController.getBySlug);
-
+router.get('/:slug', memoryController.getBySlug);
+router.get('/:id', requireAuth, memoryController.getById);
 // GET BY ID
 router.get('/:id', memoryController.getById);
 
