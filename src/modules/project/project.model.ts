@@ -29,7 +29,10 @@ export interface IProject extends Document {
   i18nName: Map<LocaleCode, LocaleText>;
   i18nDescription: Map<LocaleCode, LocaleText>;
   image?: string;
-  tech?: string[];
+  tech?: {
+    name: string;
+    icon: string;
+  }[];
   category?: string;
   projectStatus?: ProjectStatusEnum;
   type?: ProjectTypeEnum;
@@ -49,13 +52,21 @@ export interface IProject extends Document {
   };
 }
 
+const TechItemSchema = new Schema(
+  {
+    name: { type: String, required: true },
+    icon: { type: String, required: true },
+  },
+  { _id: false }
+);
+
 const projectSchema = new Schema<IProject>(
   {
     slug: { type: String, required: true, unique: true },
     i18nName: { type: Map, of: LocaleTextSchema, default: {} },
     i18nDescription: { type: Map, of: LocaleTextSchema, default: {} },
     image: { type: String },
-    tech: [{ type: String }],
+    tech: { type: [TechItemSchema], default: [] },
     category: { type: String },
     link: { type: String },
     repo: { type: String },

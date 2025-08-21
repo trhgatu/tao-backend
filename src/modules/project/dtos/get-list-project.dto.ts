@@ -6,7 +6,10 @@ export interface ProjectListItemDto {
   slug: string;
   description: string;
   image?: string;
-  tech: string[];
+  tech?: {
+    name: string;
+    icon: string;
+  }[];
   category?: string;
   status: ContentStatusEnum;
   projectStatus?: string;
