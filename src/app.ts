@@ -13,6 +13,7 @@ const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || [
   'http://localhost:5173',
   'https://the-archive-of-one.vercel.app',
   'https://admin.tao.com',
+  'https://trhgatu.is-a.dev',
 ];
 
 const app = express();

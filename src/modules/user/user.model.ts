@@ -81,11 +81,6 @@ const userSchema = new Schema<IUser>(
   }
 );
 
-userSchema.index(
-  { email: 1 },
-  { unique: true, partialFilterExpression: { isDeleted: false } }
-);
-
 userSchema.virtual('role', {
   ref: 'Role',
   localField: 'roleId',
