@@ -14,6 +14,7 @@ const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || [
   'https://the-archive-of-one.vercel.app',
   'https://admin.tao.com',
   'https://trhgatu.is-a.dev',
+  'https://thatu.is-a.dev',
 ];
 
 const app = express();
