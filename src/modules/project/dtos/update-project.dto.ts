@@ -14,7 +14,8 @@ export const updateProjectSchema = z
   .object({
     i18nName: i18nLocaleKeysPartial.optional(),
     i18nDescription: i18nLocaleKeysPartial.optional(),
-    image: z.string().url().optional(),
+    thumbnail: z.string().url().optional(),
+    images: z.array(z.string().url()).optional(),
     tech: z.array(z.string()).optional(),
     category: z.string().optional(),
     projectStatus: z

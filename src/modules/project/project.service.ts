@@ -50,7 +50,7 @@ export const getProjectByIdLocalized = async (
     ...doc.getLocalized(lang),
     _id: doc._id,
     slug: doc.slug,
-    image: doc.image,
+    thumbnail: doc.thumbnail,
     tech: doc.tech,
     category: doc.category,
     projectStatus: doc.projectStatus,
@@ -101,7 +101,7 @@ export const getProjectBySlugLocalized = async (
     ...doc.getLocalized(lang),
     _id: doc._id,
     slug: doc.slug,
-    image: doc.image,
+    thumbnail: doc.thumbnail,
     tech: doc.tech,
     category: doc.category,
     projectStatus: doc.projectStatus,
@@ -156,7 +156,7 @@ export const updateProject = async (
   }
 
   /* if (payload.slug !== undefined) project.slug = payload.slug; */
-  if (payload.image !== undefined) project.image = payload.image;
+  if (payload.thumbnail !== undefined) project.thumbnail = payload.thumbnail;
   if (payload.category !== undefined) project.category = payload.category;
   if (payload.projectStatus !== undefined)
     project.projectStatus = payload.projectStatus;

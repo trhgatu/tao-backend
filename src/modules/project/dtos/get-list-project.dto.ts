@@ -5,10 +5,10 @@ export interface ProjectListItemDto {
   name: string;
   slug: string;
   description: string;
-  image?: string;
+  thumbnail?: string;
+  images?: string[];
   tech?: {
     name: string;
-    icon: string;
   }[];
   category?: string;
   status: ContentStatusEnum;

@@ -23,11 +23,11 @@ export const createProjectSchema = z
       .optional(),
     i18nName: i18nLocaleKeys,
     i18nDescription: i18nLocaleKeys.optional(),
-    image: z.string().url().optional(),
+    thumbnail: z.string().url().optional(),
+    images: z.array(z.string().url()).optional(),
     tech: z.array(
       z.object({
         name: z.string(),
-        icon: z.string(),
       })
     ),
     category: z.string().optional(),
