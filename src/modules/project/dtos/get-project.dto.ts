@@ -5,6 +5,7 @@ export const getProjectQueryDto = z
   .object({
     lang: z.enum(['vi', 'en']).default('vi'),
     featured: z.coerce.boolean().optional(),
+    images: z.array(z.string()).optional(),
     category: z.string().optional(),
     status: z.nativeEnum(ContentStatusEnum).optional(),
     type: z.nativeEnum(ProjectTypeEnum).optional(),
