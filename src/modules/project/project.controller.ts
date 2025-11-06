@@ -102,7 +102,7 @@ export const listAdmin = async (
     sendPaginatedResponse({
       res,
       message: 'Projects fetched successfully',
-      data: result.data, // raw i18n maps
+      data: result.data,
       total: result.total,
       currentPage: result.currentPage,
       totalPages: result.totalPages,
